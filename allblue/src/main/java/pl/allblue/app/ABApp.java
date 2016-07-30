@@ -2,9 +2,6 @@ package pl.allblue.app;
 
 import android.content.Context;
 
-/**
- * Created by SfTd on 28/07/2016.
- */
 public class ABApp
 {
 

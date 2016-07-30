@@ -15,9 +15,6 @@ import android.widget.FrameLayout;
 
 import java.lang.reflect.Field;
 
-/**
- * Created by SfTd on 10/06/2015.
- */
 public class ABActivity extends Activity
 {
 

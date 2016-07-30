@@ -9,9 +9,6 @@ import java.util.Map;
 import pl.allblue.network.HttpRequest;
 
 
-/**
- * Created by SfTd on 27/04/2015.
- */
 public class Api
 {
 
