@@ -1,0 +1,9 @@
+<resources>
+    <!-- Widgets -->
+    <declare-styleable name="ABButton">
+        <attr name="ab_animation" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="ABGifView">
+        <attr name="ab_src" format="reference" />
+    </declare-styleable>
+</resources>

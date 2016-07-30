@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">AllBlue</string>
+
+    <!-- bluetooth -->
+    <string name="bluetooth_DevicesList_Title">Lista urządzeń</string>
+    <string name="bluetooth_GettingDevicesList">Trwa pobieranie listy dostępnych urządzeń...</string>
+    <string name="bluetooth_NotSupported">Bluetooth nie jest obsługiwany.</string>
+</resources>
