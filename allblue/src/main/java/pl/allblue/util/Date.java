@@ -33,6 +33,9 @@ public class Date
 
     static public String Format_Date(java.util.Date date)
     {
+        if (date == null)
+            return "-";
+
         DateFormat date_format = new SimpleDateFormat(Date.Date_Format);
         date_format.setTimeZone(TimeZone.getTimeZone("UTC"));
 
