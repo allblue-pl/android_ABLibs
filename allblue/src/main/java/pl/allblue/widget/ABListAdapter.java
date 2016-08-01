@@ -1,7 +1,6 @@
 
 package pl.allblue.widget;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,31 +10,30 @@ import android.widget.BaseAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/**
- * Created by SfTd on 2015-04-15.
- */
-abstract public class ABListAdapter<Class> extends BaseAdapter
+abstract public class ABListAdapter<DataClass> extends BaseAdapter
     implements View.OnClickListener
 {
 
     static private LayoutInflater inflater = null;
 
-    private OnItemClickListener<Class> listener = null;
 
-    private Activity activity = null;
-    private List<Class> data;
+    private Context context = null;
+
+    private List<DataClass> data;
     private int listItemLayoutId = -1;
 
-    public ABListAdapter(Activity activity, int list_item_layout_id)
+    private OnItemClickListener<DataClass> listener = null;
+
+    public ABListAdapter(Context context, int list_item_layout_id)
     {
         super();
 
-        this.activity = activity;
+        this.context = context;
+
         this.data = new ArrayList<>();
         this.listItemLayoutId = list_item_layout_id;
 
-        this.inflater = (LayoutInflater)activity.getSystemService(
+        this.inflater = (LayoutInflater)this.context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -58,7 +56,7 @@ abstract public class ABListAdapter<Class> extends BaseAdapter
         return this.data.size();
     }
 
-    public List<Class> getData()
+    public List<DataClass> getData()
     {
         return this.data;
     }
@@ -86,7 +84,7 @@ abstract public class ABListAdapter<Class> extends BaseAdapter
         return convert_view;
     }
 
-    public Class get(int position)
+    public DataClass get(int position)
     {
         return this.data.get(position);
     }
@@ -106,7 +104,7 @@ abstract public class ABListAdapter<Class> extends BaseAdapter
 
     abstract protected void setViews(int position, View view);
 
-    public interface OnItemClickListener<CLASS>
+    public interface OnItemClickListener<Class>
     {
         void onItemClick(int position, int id);
     }

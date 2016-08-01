@@ -13,9 +13,6 @@ import pl.allblue.json.fields.IntJSON;
 import pl.allblue.json.fields.ObjectJSON;
 import pl.allblue.json.fields.StringJSON;
 
-/**
- * Created by SfTd on 28/05/2015.
- */
 abstract public class JSONField
 {
 

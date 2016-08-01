@@ -9,9 +9,6 @@ import android.widget.TextView;
 import pl.allblue.app.ABActivity;
 import pl.allblue.widget.ABGifView;
 
-/**
- * Created by SfTd on 25/06/2016.
- */
 public class Notifications
 {
 

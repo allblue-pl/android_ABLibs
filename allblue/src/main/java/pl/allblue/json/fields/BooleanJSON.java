@@ -6,9 +6,7 @@ import org.json.JSONObject;
 
 import pl.allblue.json.JSONField;
 
-/**
- * Created by SfTd on 28/05/2015.
- */
+
 public class BooleanJSON extends JSONField
 {
 

@@ -11,9 +11,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-/**
- * Created by SfTd on 24/06/2016.
- */
 public class JSONHelper
 {
 

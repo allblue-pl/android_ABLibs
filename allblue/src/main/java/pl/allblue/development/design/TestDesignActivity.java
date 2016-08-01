@@ -10,9 +10,9 @@ import pl.allblue.app.ABActivity;
 public class TestDesignActivity extends ABActivity
 {
 
-    public TestDesignActivity(String activity_layout_name)
+    public TestDesignActivity(int activity_layout_id)
     {
-        super(activity_layout_name);
+        super(activity_layout_id);
     }
 
     protected void addListView(int list_view_id, int item_list_layout_id)

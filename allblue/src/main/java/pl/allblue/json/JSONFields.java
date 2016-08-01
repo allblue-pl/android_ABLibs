@@ -11,9 +11,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by SfTd on 28/05/2015.
- */
 public class JSONFields
 {
 

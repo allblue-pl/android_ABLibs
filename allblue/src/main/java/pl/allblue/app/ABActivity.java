@@ -39,11 +39,11 @@ public class ABActivity extends Activity
     /* Widgets */
     boolean widgets_InitializeOnCreate = false;
 
-    public ABActivity(String activity_layout_name)
+    public ABActivity(int activity_layout_id)
     {
         super();
 
-        this.layout_Name = activity_layout_name;
+        this.layout_Id = activity_layout_id;
     }
 
     public ViewGroup abAddContentView(int layout_id)
@@ -124,39 +124,47 @@ public class ABActivity extends Activity
 
     protected void abWidgets_Initialize()
     {
-        Field[] fields = this.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            try {
-                if (field.getName().length() < 2)
-                    continue;
+        Class<?> ab_activity_class = this.getClass();
+        while (true) {
+            Field[] fields = ab_activity_class.getDeclaredFields();
+            for (Field field : fields) {
+                try {
+                    if (field.getName().length() < 2)
+                        continue;
 
-                if (field.getName().charAt(0) != 'w')
-                    continue;
+                    if (field.getName().charAt(0) != 'w')
+                        continue;
 
-                if (!Character.isUpperCase(field.getName().charAt(1)))
-                    continue;
+                    if (!Character.isUpperCase(field.getName().charAt(1)))
+                        continue;
 
-                if (!View.class.isAssignableFrom(field.getType()))
-                    continue;
+                    if (!View.class.isAssignableFrom(field.getType()))
+                        continue;
 
-                Log.d("ABActivity", "Getting: " + this.layout_Name + "_" +
-                        field.getName().substring(1));
+                    Log.d("ABActivity", "Getting: " + this.layout_Name + "_" +
+                            field.getName().substring(1));
 
-                String view_name = this.layout_Name + "_" +
-                        field.getName().substring(1);
-                int view_id = this.getResources().getIdentifier(view_name,"id",
-                        this.getPackageName());
+                    String view_name = this.layout_Name + "_" +
+                            field.getName().substring(1);
+                    int view_id = this.getResources().getIdentifier(view_name,
+                            "id", this.getPackageName());
 
-                if (view_id == 0)
-                    throw new AssertionError("Cannot find widget: " + view_name);
+                    if (view_id == 0)
+                        throw new AssertionError("Cannot find widget: " + view_name);
 
-                View view = this.findViewById(view_id);
+                    View view = this.findViewById(view_id);
 
-                Log.d("ABActivity", view.toString());
-                field.set(this, view);
-            } catch (Exception e) {
-                throw new AssertionError(e);
+                    Log.d("ABActivity", view.toString());
+                    field.set(this, view);
+                } catch (Exception e) {
+                    throw new AssertionError(e);
+                }
             }
+
+            ab_activity_class = ab_activity_class.getSuperclass();
+            if (ab_activity_class == ABActivity.class ||
+                    ab_activity_class == null)
+                break;
         }
     }
 
@@ -223,11 +231,9 @@ public class ABActivity extends Activity
     {
         super.onCreate(saved_instance_state);
 
-        ABApp.Initialize(this.getApplicationContext());
-
         /* Layout */
-        this.layout_Id = this.getResources().getIdentifier(this.layout_Name,
-                "layout", this.getPackageName());
+        this.layout_Name = this.getApplicationContext().getResources()
+                .getResourceEntryName(this.layout_Id);
         this.setContentView(this.layout_Id);
 
         /* Widgets */
