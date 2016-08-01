@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AllBlue</string>
+    <string name="titles_App">AllBlue Libs</string>
 
     <!-- bluetooth -->
     <string name="bluetooth_DevicesList_Title">Lista urządzeń</string>
