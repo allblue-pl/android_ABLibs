@@ -16,11 +16,11 @@ import java.io.IOException;
 public class ABFile
 {
 
-    static public String GetContent(Context context, String file_name)
+    static public String GetContent(Context context, String file_path)
             throws IOException
     {
        /* Data */
-        File file = new File(context.getFilesDir(), file_name);
+        File file = new File(context.getFilesDir(), file_path);
         if (file.exists()) {
             FileInputStream fis = new FileInputStream(file);
             byte[] data = new byte[(int) file.length()];
@@ -35,10 +35,19 @@ public class ABFile
         throw new FileNotFoundException();
     }
 
-    static public void PutContent(Context context, String file_name,
+    static public boolean Exists(Context context, String file_path)
+    {
+        File file = new File(context.getFilesDir(), file_path);
+        if (file.exists())
+            return true;
+
+        return false;
+    }
+
+    static public void PutContent(Context context, String file_path,
             String content) throws IOException
     {
-        File file = new File(context.getFilesDir(), file_name);
+        File file = new File(context.getFilesDir(), file_path);
         FileOutputStream fos = new FileOutputStream(file);
         byte[] data_bytes = content.getBytes();
         fos.write(data_bytes);

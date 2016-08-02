@@ -25,6 +25,7 @@ public class FloatJSON extends JSONField
     public void setValue(java.lang.Float value)
     {
         this.value = value;
+        this.initValue();
     }
 
     @Override

@@ -19,6 +19,7 @@ public class StringJSON extends JSONField
     public void setValue(String value)
     {
         this.value = value;
+        this.initValue();
     }
 
     public String getValue()

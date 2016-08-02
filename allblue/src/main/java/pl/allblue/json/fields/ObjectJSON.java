@@ -30,6 +30,7 @@ public class ObjectJSON extends JSONField
     {
         try {
             this.value = new org.json.JSONObject(value);
+            this.initValue();
         } catch (Exception e) {
             Log.d("Object", "Cannot parse json_array.");
             this.value = null;

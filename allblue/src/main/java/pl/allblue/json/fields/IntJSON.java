@@ -19,6 +19,7 @@ public class IntJSON extends JSONField
     public void setValue(Integer value)
     {
         this.value = value;
+        this.initValue();
     }
 
     public Integer getValue()

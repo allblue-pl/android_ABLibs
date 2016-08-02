@@ -20,6 +20,7 @@ public class DateJSON extends JSONField
     public void setValue(Long value)
     {
         this.value = value;
+        this.initValue();
     }
 
     public Long getValue()

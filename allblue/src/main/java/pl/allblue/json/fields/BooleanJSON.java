@@ -20,6 +20,7 @@ public class BooleanJSON extends JSONField
     public void setValue(java.lang.Boolean value)
     {
         this.value = value;
+        this.initValue();
     }
 
     public java.lang.Boolean getValue()

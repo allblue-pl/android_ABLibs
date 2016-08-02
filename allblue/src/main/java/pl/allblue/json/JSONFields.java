@@ -15,7 +15,7 @@ public class JSONFields
 {
 
     static public <JSONFieldsClass extends JSONFields> List<JSONFieldsClass>
-            ReadList(Class fields_class, String[] field_names,
+            ReadList(Class fields_class, List<String> field_names,
             JSONArray json_array) throws Exception
     {
         List<JSONFieldsClass> fields_list = new ArrayList<>();
@@ -37,16 +37,14 @@ public class JSONFields
 
     }
 
-    public void read(String[] field_names, JSONArray json_array)
+    public void read(List<String> field_names, JSONArray json_array)
             throws JSONException
     {
-        List<String> field_names_list = Arrays.asList(field_names);
-
         for (JSONField field : this.fields) {
-            int index = field_names_list.indexOf(field.getName());
+            int index = field_names.indexOf(field.getName());
             if (index == -1) {
                 Log.w("JSONFields", "Cannot find field `" + field.getName() +
-                        "` in: " + Arrays.toString(field_names));
+                        "` in: " + Arrays.toString(field_names.toArray()));
                 continue;
             }
 
@@ -54,13 +52,14 @@ public class JSONFields
         }
     }
 
-    public void write(String[] field_names, JSONArray json_array)
+    public void write(List<String> field_names, JSONArray json_array)
             throws JSONException
     {
-        List<String> field_names_list = Arrays.asList(field_names);
-
         for (JSONField field : this.fields) {
-            int index = field_names_list.indexOf(field.getName());
+            if (!field.isSet())
+                continue;
+
+            int index = field_names.indexOf(field.getName());
             if (index == -1)
                 continue;
 

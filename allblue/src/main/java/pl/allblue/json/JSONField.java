@@ -17,15 +17,26 @@ abstract public class JSONField
 {
 
     private String name = null;
+    private boolean valueSet = false;
 
     public JSONField(String name)
     {
         this.name = name;
     }
 
+    public boolean isSet()
+    {
+        return this.valueSet;
+    }
+
     protected String getName()
     {
         return this.name;
+    }
+
+    protected void initValue()
+    {
+        this.valueSet = true;
     }
 
     abstract public void read(JSONArray json_array, int index)

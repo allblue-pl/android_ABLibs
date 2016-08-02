@@ -51,6 +51,11 @@ abstract public class ABListAdapter<DataClass> extends BaseAdapter
         this.listener = listener;
     }
 
+    public Context getContext()
+    {
+        return this.context;
+    }
+
     public int getCount()
     {
         return this.data.size();
