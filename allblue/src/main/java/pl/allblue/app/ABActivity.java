@@ -75,6 +75,8 @@ public class ABActivity extends Activity
 
     public void abStartActivity(Intent intent)
     {
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                Intent.FLAG_ACTIVITY_NEW_TASK);
         this.startActivity(intent);
         this.finish();
     }

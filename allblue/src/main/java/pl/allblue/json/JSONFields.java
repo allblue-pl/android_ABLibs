@@ -43,8 +43,8 @@ public class JSONFields
         for (JSONField field : this.fields) {
             int index = field_names.indexOf(field.getName());
             if (index == -1) {
-                Log.w("JSONFields", "Cannot find field `" + field.getName() +
-                        "` in: " + Arrays.toString(field_names.toArray()));
+//                Log.w("JSONFields", "Cannot find field `" + field.getName() +
+//                        "` in: " + Arrays.toString(field_names.toArray()));
                 continue;
             }
 
