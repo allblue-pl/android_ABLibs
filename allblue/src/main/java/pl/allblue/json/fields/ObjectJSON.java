@@ -11,52 +11,54 @@ import pl.allblue.json.JSONField;
 /**
  * Created by SfTd on 23/04/2016.
  */
-public class ObjectJSON extends JSONField
+public class ObjectJSON extends JSONField<JSONObject>
 {
-
-    private org.json.JSONObject value = null;
 
     public ObjectJSON(String name)
     {
         super(name);
     }
 
-    public org.json.JSONObject getValue()
-    {
-        return this.value;
-    }
-
     public void setValue(String value)
     {
         try {
-            this.value = new org.json.JSONObject(value);
-            this.initValue();
+            this.setValue(new org.json.JSONObject(value));
         } catch (Exception e) {
-            Log.d("Object", "Cannot parse json_array.");
-            this.value = null;
+            Log.e("ObjectJSON", "Cannot parse json_array.");
+            this.setValue((JSONObject)null);
         }
     }
 
-    @Override
-    public void read(JSONArray json_array, int index) throws JSONException
-    {
-        if (json_array.isNull(index)) {
-            this.value = null;
-            return;
-        }
 
-        this.setValue((String)json_array.getString(index));
+    /* ObjectJSON Overrides */
+    @Override
+    public boolean isEqual(JSONObject value)
+    {
+        return this.getValue().toString().compareTo(value.toString()) == 0;
     }
 
     @Override
-    public void write(JSONArray json_array, int index) throws JSONException
+    public void readValue(JSONArray json_array, int index) throws JSONException
     {
-        if (this.value == null) {
-            json_array.put(index, org.json.JSONObject.NULL);
-            return;
-        }
+        this.setValue(json_array.getString(index));
+    }
 
-        json_array.put(index, this.value.toString());
+    @Override
+    public void readValue(JSONObject json_object) throws JSONException
+    {
+        this.setValue(json_object.getString(this.getName()));
+    }
+
+    @Override
+    public void writeValue(JSONArray json_array, int index) throws JSONException
+    {
+        json_array.put(index, this.getValue().toString());
+    }
+
+    @Override
+    public void writeValue(JSONObject json_object) throws JSONException
+    {
+        json_object.put(this.getName(), this.getValue().toString());
     }
 
 }

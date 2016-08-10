@@ -52,9 +52,13 @@ public class Api
 
             result = json.getInt("result");
             message = json.getString("message");
+
+            if (json.has("EDEBUG")) {
+                Log.w("Api", "EDEBUG: " + json.getJSONArray("EDEBUG").toString());
+            }
         } catch (Exception e) {
             json = new JSONObject();
-
+            result = 2;
             message = "Cannot parse json data: " + http_response.getData();
         }
 

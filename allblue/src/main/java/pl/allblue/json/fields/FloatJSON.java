@@ -7,46 +7,44 @@ import org.json.JSONObject;
 import pl.allblue.json.JSONField;
 
 
-public class FloatJSON extends JSONField
+public class FloatJSON extends JSONField<Float>
 {
-
-    private java.lang.Float value = null;
 
     public FloatJSON(String name)
     {
         super(name);
     }
 
-    public float getValue()
-    {
-        return this.value;
-    }
 
-    public void setValue(java.lang.Float value)
+    /* JSONField Overrides */
+    @Override
+    public boolean isEqual(Float value)
     {
-        this.value = value;
-        this.initValue();
+        return this.getValue().compareTo(value) == 0;
     }
 
     @Override
-    public void read(JSONArray json_array, int index) throws JSONException
+    public void readValue(JSONArray json_array, int index) throws JSONException
     {
-        if (json_array.isNull(index)) {
-            this.value = null;
-            return;
-        }
-
-        this.value = (float)json_array.getDouble(index);
+        this.setValue((float)json_array.getDouble(index));
     }
 
     @Override
-    public void write(JSONArray json_array, int index) throws JSONException
+    public void readValue(JSONObject json_object) throws JSONException
     {
-        if (this.value == null) {
-            json_array.put(index, JSONObject.NULL);
-            return;
-        }
-
-        json_array.put(index, this.value);
+        this.setValue((float)json_object.getDouble(this.getName()));
     }
+
+    @Override
+    public void writeValue(JSONArray json_array, int index) throws JSONException
+    {
+        json_array.put(index, (float)this.getValue());
+    }
+
+    @Override
+    public void writeValue(JSONObject json_object) throws JSONException
+    {
+        json_object.put(this.getName(), (float)this.getValue());
+    }
+
 }

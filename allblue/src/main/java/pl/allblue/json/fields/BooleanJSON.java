@@ -7,47 +7,45 @@ import org.json.JSONObject;
 import pl.allblue.json.JSONField;
 
 
-public class BooleanJSON extends JSONField
+public class BooleanJSON extends JSONField<Boolean>
 {
-
-    private java.lang.Boolean value = null;
 
     public BooleanJSON(String name)
     {
         super(name);
     }
 
-    public void setValue(java.lang.Boolean value)
-    {
-        this.value = value;
-        this.initValue();
-    }
 
-    public java.lang.Boolean getValue()
+    /* JSONField Overrides */
+
+    @Override
+    public boolean isEqual(Boolean value)
     {
-        return this.value;
+        return this.getValue().compareTo(value) == 0;
     }
 
     @Override
-    public void read(JSONArray json_array, int index) throws JSONException
+    public void readValue(JSONArray json_array, int index) throws JSONException
     {
-        if (json_array.isNull(index)) {
-            this.value = null;
-            return;
-        }
-
-        this.value = json_array.getBoolean(index);
+        this.setValue(json_array.getBoolean(index));
     }
 
     @Override
-    public void write(JSONArray json_array, int index) throws JSONException
+    public void readValue(JSONObject json_object) throws JSONException
     {
-        if (this.value == null) {
-            json_array.put(index, JSONObject.NULL);
-            return;
-        }
+        this.setValue(json_object.getBoolean(this.getName()));
+    }
 
-        json_array.put(index, (boolean)this.value);
+    @Override
+    public void writeValue(JSONArray json_array, int index) throws JSONException
+    {
+        json_array.put(index, (boolean)this.getValue());
+    }
+
+    @Override
+    public void writeValue(JSONObject json_object) throws JSONException
+    {
+        json_object.put(this.getName(), (boolean)this.getValue());
     }
 
 }

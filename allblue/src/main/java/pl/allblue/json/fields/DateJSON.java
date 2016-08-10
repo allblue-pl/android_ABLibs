@@ -7,61 +7,55 @@ import org.json.JSONObject;
 import pl.allblue.json.JSONField;
 
 
-public class DateJSON extends JSONField
+public class DateJSON extends JSONField<Long>
 {
-
-    private Long value = null;
 
     public DateJSON(String name)
     {
         super(name);
     }
 
-    public void setValue(Long value)
-    {
-        this.value = value;
-        this.initValue();
-    }
-
-    public Long getValue()
-    {
-        if (this.value == null)
-            return null;
-
-        return this.value;
-    }
-
     public java.util.Date getDate()
     {
-        if (this.value == null)
+        if (this.getValue() == null)
             return null;
 
         java.util.Date date = new java.util.Date();
-        date.setTime(this.value * 1000);
+        date.setTime(this.getValue() * 1000);
 
         return date;
     }
 
-    @Override
-    public void read(JSONArray json_array, int index) throws JSONException
-    {
-        if (json_array.isNull(index)) {
-            this.value = null;
-            return;
-        }
 
-        this.value = json_array.getLong(index);
+    /* JSONField Overrides */
+    @Override
+    public boolean isEqual(Long value)
+    {
+        return this.getValue().compareTo(value) == 0;
     }
 
     @Override
-    public void write(JSONArray json_array, int index) throws JSONException
+    public void readValue(JSONArray json_array, int index) throws JSONException
     {
-        if (this.value == null) {
-            json_array.put(index, JSONObject.NULL);
-            return;
-        }
+        this.setValue(json_array.getLong(index));
+    }
 
-        json_array.put(index, this.value);
+    @Override
+    public void readValue(JSONObject json_object) throws JSONException
+    {
+        this.setValue(json_object.getLong(this.getName()));
+    }
+
+    @Override
+    public void writeValue(JSONArray json_array, int index) throws JSONException
+    {
+        json_array.put(index, (long)this.getValue());
+    }
+
+    @Override
+    public void writeValue(JSONObject json_object) throws JSONException
+    {
+        json_object.put(this.getName(), (long)this.getValue());
     }
 
 }

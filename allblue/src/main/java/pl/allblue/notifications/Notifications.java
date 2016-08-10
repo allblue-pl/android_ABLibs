@@ -1,10 +1,16 @@
 package pl.allblue.notifications;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.concurrent.Callable;
 
 import pl.allblue.app.ABActivity;
 import pl.allblue.widget.ABGifView;
@@ -102,6 +108,27 @@ public class Notifications
         }
     }
 
+    public void showConfirmation(Context context, String text, String yes, String no,
+           final OnClickListener callback)
+    {
+        new AlertDialog.Builder(context)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setTitle(text)
+            .setPositiveButton(yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    callback.onClick(true);
+                }
+            })
+            .setNegativeButton(no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    callback.onClick(false);
+                }
+            })
+            .show();
+    }
+
     public void hideMessage()
     {
         this.wMessage.setVisibility(View.GONE);
@@ -164,6 +191,11 @@ public class Notifications
     public void showMessage_Success(String message)
     {
         this.showMessage_Success(message, null);
+    }
+
+
+    public interface OnClickListener {
+        void onClick(boolean result);
     }
 
 }

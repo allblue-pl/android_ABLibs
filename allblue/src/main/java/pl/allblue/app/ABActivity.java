@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 public class ABActivity extends Activity
 {
@@ -131,6 +132,9 @@ public class ABActivity extends Activity
             Field[] fields = ab_activity_class.getDeclaredFields();
             for (Field field : fields) {
                 try {
+                    if (!Modifier.isPublic(field.getModifiers()))
+                        continue;
+
                     if (field.getName().length() < 2)
                         continue;
 

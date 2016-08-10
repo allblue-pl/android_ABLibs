@@ -6,46 +6,44 @@ import org.json.JSONObject;
 
 import pl.allblue.json.JSONField;
 
-public class StringJSON extends JSONField
+public class StringJSON extends JSONField<String>
 {
-
-    private java.lang.String value = null;
 
     public StringJSON(java.lang.String name)
     {
         super(name);
     }
 
-    public void setValue(String value)
-    {
-        this.value = value;
-        this.initValue();
-    }
 
-    public String getValue()
+    /* JSONField Overrides */
+    @Override
+    public boolean isEqual(String value)
     {
-        return this.value;
+        return this.getValue().compareTo(value) == 0;
     }
 
     @Override
-    public void read(JSONArray json_array, int index) throws JSONException
+    public void readValue(JSONArray json_array, int index) throws JSONException
     {
-        if (json_array.isNull(index)) {
-            this.value = null;
-            return;
-        }
-
-        this.value = json_array.getString(index);
+        this.setValue(json_array.getString(index));
     }
 
     @Override
-    public void write(JSONArray json_array, int index) throws JSONException
+    public void readValue(JSONObject json_object) throws JSONException
     {
-        if (this.value == null) {
-            json_array.put(index, JSONObject.NULL);
-            return;
-        }
-
-        json_array.put(index, this.value);
+        this.setValue(json_object.getString(this.getName()));
     }
+
+    @Override
+    public void writeValue(JSONArray json_array, int index) throws JSONException
+    {
+        json_array.put(index, this.getValue());
+    }
+
+    @Override
+    public void writeValue(JSONObject json_object) throws JSONException
+    {
+        json_object.put(this.getName(), this.getValue());
+    }
+
 }

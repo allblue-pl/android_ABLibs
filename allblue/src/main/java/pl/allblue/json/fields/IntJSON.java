@@ -1,12 +1,14 @@
 package pl.allblue.json.fields;
 
+import android.content.Intent;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import pl.allblue.json.JSONField;
 
-public class IntJSON extends JSONField
+public class IntJSON extends JSONField<Integer>
 {
 
     private Integer value = null;
@@ -16,36 +18,36 @@ public class IntJSON extends JSONField
         super(name);
     }
 
-    public void setValue(Integer value)
-    {
-        this.value = value;
-        this.initValue();
-    }
 
-    public Integer getValue()
+    /* JSONField Overrides */
+    @Override
+    public boolean isEqual(Integer value)
     {
-        return this.value;
+        return this.getValue().compareTo(value) == 0;
     }
 
     @Override
-    public void read(JSONArray json_array, int index) throws JSONException
+    public void readValue(JSONArray json_array, int index) throws JSONException
     {
-        if (json_array.isNull(index)) {
-            this.value = null;
-            return;
-        }
-
-        this.value = json_array.getInt(index);
+        this.setValue(json_array.getInt(index));
     }
 
     @Override
-    public void write(JSONArray json_array, int index) throws JSONException
+    public void readValue(JSONObject json_object) throws JSONException
     {
-
-        if (this.value == null) {
-            json_array.put(index, JSONObject.NULL);
-            return;
-        }
-        json_array.put(index, this.value);
+        this.setValue(json_object.getInt(this.getName()));
     }
+
+    @Override
+    public void writeValue(JSONArray json_array, int index) throws JSONException
+    {
+        json_array.put(index, (int)this.getValue());
+    }
+
+    @Override
+    public void writeValue(JSONObject json_object) throws JSONException
+    {
+        json_object.put(this.getName(), (int)this.getValue());
+    }
+    
 }

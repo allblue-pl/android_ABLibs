@@ -5,4 +5,8 @@
     <string name="bluetooth_DevicesList_Title">Lista urządzeń</string>
     <string name="bluetooth_GettingDevicesList">Trwa pobieranie listy dostępnych urządzeń...</string>
     <string name="bluetooth_NotSupported">Bluetooth nie jest obsługiwany.</string>
+
+    <!-- validator -->
+    <string name="notValid_Empty">To pole nie może być puste.</string>
+    <string name="notValid_Regexp">Nieprawidłowy format. Poprawny format to: </string>
 </resources>
