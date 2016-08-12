@@ -19,7 +19,7 @@ public class JSONSetList<SetClass extends JSONSet> extends ArrayList<SetClass>
             IllegalAccessException, InstantiationException, JSONException
     {
         JSONSetList set_list = new JSONSetList();
-        set_list.addJSONArrays(set_class, field_names, json_array);
+        set_list.addAll_JSONArrays(set_class, field_names, json_array);
 
         return set_list;
     }
@@ -30,7 +30,7 @@ public class JSONSetList<SetClass extends JSONSet> extends ArrayList<SetClass>
             InstantiationException, JSONException
     {
         JSONSetList set_list = new JSONSetList();
-        set_list.addAll_JSONObjects(set_class, json_array);
+        set_list.addAll_JSONObjects(set_class, json_array, JSONSet.State.NONE);
 
         return set_list;
     }
@@ -41,7 +41,7 @@ public class JSONSetList<SetClass extends JSONSet> extends ArrayList<SetClass>
         super();
     }
 
-    public void addJSONArrays(Class<? extends JSONSet> set_class,
+    public void addAll_JSONArrays(Class<? extends JSONSet> set_class,
             List<String> field_names, JSONArray json_array)
             throws IllegalAccessException, InstantiationException, JSONException
     {
@@ -55,7 +55,7 @@ public class JSONSetList<SetClass extends JSONSet> extends ArrayList<SetClass>
     }
 
     public void addAll_JSONObjects(int index, Class<? extends JSONSet> set_class,
-            JSONArray json_array) throws
+            JSONArray json_array, JSONSet.State state) throws
             IllegalAccessException, InstantiationException, JSONException
     {
         int json_array_length = json_array.length();
@@ -63,15 +63,17 @@ public class JSONSetList<SetClass extends JSONSet> extends ArrayList<SetClass>
             SetClass json_set = (SetClass)set_class.newInstance();
             json_set.read(json_array.getJSONObject(i));
 
+            json_set.setState(state);
+
             this.add(index + i, json_set);
         }
     }
 
     public void addAll_JSONObjects(Class<? extends JSONSet> set_class,
-            JSONArray json_array) throws
+            JSONArray json_array, JSONSet.State state) throws
             IllegalAccessException, InstantiationException, JSONException
     {
-        this.addAll_JSONObjects(0, set_class, json_array);
+        this.addAll_JSONObjects(0, set_class, json_array, state);
     }
 
     public JSONArray getAllNew_JSONObjects() throws JSONException
