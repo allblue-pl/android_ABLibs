@@ -21,33 +21,34 @@ public class IntJSON extends JSONField<Integer>
 
     /* JSONField Overrides */
     @Override
-    public boolean isEqual(Integer value)
+    protected boolean compareValue(Integer value)
     {
         return this.getValue().compareTo(value) == 0;
     }
 
     @Override
-    public void readValue(JSONArray json_array, int index) throws JSONException
+    protected Integer readValue(JSONArray json_array, int index) throws JSONException
     {
-        this.setValue(json_array.getInt(index));
+        return json_array.getInt(index);
     }
 
     @Override
-    public void readValue(JSONObject json_object) throws JSONException
+    protected Integer readValue(JSONObject json_object) throws JSONException
     {
-        this.setValue(json_object.getInt(this.getName()));
+        return json_object.getInt(this.getName());
     }
 
     @Override
-    public void writeValue(JSONArray json_array, int index) throws JSONException
+    protected void writeValue(JSONArray json_array, int index, Integer value)
+            throws JSONException
     {
-        json_array.put(index, (int)this.getValue());
+        json_array.put(index, (int)value);
     }
 
     @Override
-    public void writeValue(JSONObject json_object) throws JSONException
+    protected void writeValue(JSONObject json_object, Integer value) throws JSONException
     {
-        json_object.put(this.getName(), (int)this.getValue());
+        json_object.put(this.getName(), (int)value);
     }
     
 }

@@ -18,33 +18,35 @@ public class FloatJSON extends JSONField<Float>
 
     /* JSONField Overrides */
     @Override
-    public boolean isEqual(Float value)
+    protected boolean compareValue(Float value)
     {
         return this.getValue().compareTo(value) == 0;
     }
 
     @Override
-    public void readValue(JSONArray json_array, int index) throws JSONException
+    protected Float readValue(JSONArray json_array, int index) throws JSONException
     {
-        this.setValue((float)json_array.getDouble(index));
+        return (float)json_array.getDouble(index);
     }
 
     @Override
-    public void readValue(JSONObject json_object) throws JSONException
+    protected Float readValue(JSONObject json_object) throws JSONException
     {
-        this.setValue((float)json_object.getDouble(this.getName()));
+        return (float)json_object.getDouble(this.getName());
     }
 
     @Override
-    public void writeValue(JSONArray json_array, int index) throws JSONException
+    protected void writeValue(JSONArray json_array, int index, Float value)
+            throws JSONException
     {
-        json_array.put(index, (float)this.getValue());
+        json_array.put(index, (float)value);
     }
 
     @Override
-    public void writeValue(JSONObject json_object) throws JSONException
+    protected void writeValue(JSONObject json_object, Float value)
+            throws JSONException
     {
-        json_object.put(this.getName(), (float)this.getValue());
+        json_object.put(this.getName(), (float)value);
     }
 
 }

@@ -17,35 +17,37 @@ public class BooleanJSON extends JSONField<Boolean>
 
 
     /* JSONField Overrides */
-
     @Override
-    public boolean isEqual(Boolean value)
+    protected boolean compareValue(Boolean value)
     {
         return this.getValue().compareTo(value) == 0;
     }
 
     @Override
-    public void readValue(JSONArray json_array, int index) throws JSONException
+    protected Boolean readValue(JSONArray json_array, int index)
+            throws JSONException
     {
-        this.setValue(json_array.getBoolean(index));
+        return json_array.getBoolean(index);
     }
 
     @Override
-    public void readValue(JSONObject json_object) throws JSONException
+    protected Boolean readValue(JSONObject json_object) throws JSONException
     {
-        this.setValue(json_object.getBoolean(this.getName()));
+        return json_object.getBoolean(this.getName());
     }
 
     @Override
-    public void writeValue(JSONArray json_array, int index) throws JSONException
+    protected void writeValue(JSONArray json_array, int index, Boolean value)
+            throws JSONException
     {
-        json_array.put(index, (boolean)this.getValue());
+        json_array.put(index, (boolean)value);
     }
 
     @Override
-    public void writeValue(JSONObject json_object) throws JSONException
+    protected void writeValue(JSONObject json_object, Boolean value)
+            throws JSONException
     {
-        json_object.put(this.getName(), (boolean)this.getValue());
+        json_object.put(this.getName(), (boolean)value);
     }
 
 }

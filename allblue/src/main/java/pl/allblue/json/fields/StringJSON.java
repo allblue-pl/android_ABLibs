@@ -17,33 +17,34 @@ public class StringJSON extends JSONField<String>
 
     /* JSONField Overrides */
     @Override
-    public boolean isEqual(String value)
+    protected boolean compareValue(String value)
     {
         return this.getValue().compareTo(value) == 0;
     }
 
     @Override
-    public void readValue(JSONArray json_array, int index) throws JSONException
+    protected String readValue(JSONArray json_array, int index) throws JSONException
     {
-        this.setValue(json_array.getString(index));
+        return json_array.getString(index);
     }
 
     @Override
-    public void readValue(JSONObject json_object) throws JSONException
+    protected String readValue(JSONObject json_object) throws JSONException
     {
-        this.setValue(json_object.getString(this.getName()));
+        return json_object.getString(this.getName());
     }
 
     @Override
-    public void writeValue(JSONArray json_array, int index) throws JSONException
+    protected void writeValue(JSONArray json_array, int index, String value)
+            throws JSONException
     {
-        json_array.put(index, this.getValue());
+        json_array.put(index, value);
     }
 
     @Override
-    public void writeValue(JSONObject json_object) throws JSONException
+    protected void writeValue(JSONObject json_object, String value) throws JSONException
     {
-        json_object.put(this.getName(), this.getValue());
+        json_object.put(this.getName(), value);
     }
 
 }

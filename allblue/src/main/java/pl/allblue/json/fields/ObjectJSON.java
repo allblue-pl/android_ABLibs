@@ -32,33 +32,36 @@ public class ObjectJSON extends JSONField<JSONObject>
 
     /* ObjectJSON Overrides */
     @Override
-    public boolean isEqual(JSONObject value)
+    protected boolean compareValue(JSONObject value)
     {
         return this.getValue().toString().compareTo(value.toString()) == 0;
     }
 
     @Override
-    public void readValue(JSONArray json_array, int index) throws JSONException
+    protected JSONObject readValue(JSONArray json_array, int index)
+            throws JSONException
     {
-        this.setValue(json_array.getString(index));
+        return new JSONObject(json_array.getString(index));
     }
 
     @Override
-    public void readValue(JSONObject json_object) throws JSONException
+    protected JSONObject readValue(JSONObject json_object) throws JSONException
     {
-        this.setValue(json_object.getString(this.getName()));
+        return new JSONObject(json_object.getString(this.getName()));
     }
 
     @Override
-    public void writeValue(JSONArray json_array, int index) throws JSONException
+    protected void writeValue(JSONArray json_array, int index, JSONObject value)
+            throws JSONException
     {
-        json_array.put(index, this.getValue().toString());
+        json_array.put(index, value.toString());
     }
 
     @Override
-    public void writeValue(JSONObject json_object) throws JSONException
+    protected void writeValue(JSONObject json_object, JSONObject value)
+            throws JSONException
     {
-        json_object.put(this.getName(), this.getValue().toString());
+        json_object.put(this.getName(), value.toString());
     }
 
 }

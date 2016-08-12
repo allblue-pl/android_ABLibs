@@ -71,13 +71,14 @@ public class HttpRequest
             DataOutputStream dos = new DataOutputStream(url_connection.getOutputStream());
             dos.write(post_data);
 
-
             Reader in = new BufferedReader(new InputStreamReader(url_connection.getInputStream(), "UTF-8"));
             for (int c = in.read(); c != -1; c = in.read())
                 response.append((char)c);
 
             success = true;
         } catch (Exception e) {
+            Log.e("HttpRequest", "Exception", e);
+
             try {
                 if (url_connection != null) {
                     error_message = "Post Exception: " + e.getMessage() +
@@ -85,7 +86,8 @@ public class HttpRequest
                 } else
                     error_message = e.getMessage();
             } catch (IOException io_e) {
-                error_message = "IO Exception: " + e.getMessage();
+                Log.e("HttpRequest", "IOException", io_e);
+                error_message = "IO Exception: " + io_e.getMessage();
             }
         } finally {
             if (url_connection != null)

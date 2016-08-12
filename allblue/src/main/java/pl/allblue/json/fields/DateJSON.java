@@ -29,33 +29,35 @@ public class DateJSON extends JSONField<Long>
 
     /* JSONField Overrides */
     @Override
-    public boolean isEqual(Long value)
+    protected boolean compareValue(Long value)
     {
         return this.getValue().compareTo(value) == 0;
     }
 
     @Override
-    public void readValue(JSONArray json_array, int index) throws JSONException
+    protected Long readValue(JSONArray json_array, int index) throws JSONException
     {
-        this.setValue(json_array.getLong(index));
+        return json_array.getLong(index);
     }
 
     @Override
-    public void readValue(JSONObject json_object) throws JSONException
+    protected Long readValue(JSONObject json_object) throws JSONException
     {
-        this.setValue(json_object.getLong(this.getName()));
+        return json_object.getLong(this.getName());
     }
 
     @Override
-    public void writeValue(JSONArray json_array, int index) throws JSONException
+    protected void writeValue(JSONArray json_array, int index, Long value)
+            throws JSONException
     {
-        json_array.put(index, (long)this.getValue());
+        json_array.put(index, (long)value);
     }
 
     @Override
-    public void writeValue(JSONObject json_object) throws JSONException
+    protected void writeValue(JSONObject json_object, Long value)
+            throws JSONException
     {
-        json_object.put(this.getName(), (long)this.getValue());
+        json_object.put(this.getName(), (long)value);
     }
 
 }
