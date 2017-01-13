@@ -14,13 +14,10 @@ import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
 
-/**
- * Created by SfTd on 15/05/2015.
- */
 public class HttpRequest
 {
 
-    static public final int TIMEOUT = 5000;
+    static public final int TIMEOUT = 30000;
 
 
     static public void Post(final String uri, final Map<String, String> fields,

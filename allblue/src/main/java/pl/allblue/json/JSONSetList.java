@@ -89,7 +89,7 @@ public class JSONSetList<SetClass extends JSONSet> extends ArrayList<SetClass>
         return json_array;
     }
 
-    public JSONArray getAllUpdated_JSONObjects(String id_field_name) throws JSONException
+    public JSONArray getAllUpdated_JSONObjects(String[] id_field_names) throws JSONException
     {
         JSONArray json_array = new JSONArray();
         for (int i = 0; i < this.size(); i++) {
@@ -97,17 +97,35 @@ public class JSONSetList<SetClass extends JSONSet> extends ArrayList<SetClass>
                 continue;
 
             JSONObject set_json = this.get(i).getJSONObject(true);
-            this.get(i).getField(id_field_name).write(set_json, false);
+            for (int j = 0; j < id_field_names.length; j++)
+                this.get(i).getField(id_field_names[j]).write(set_json, false);
 
-            Log.d("JSONSetList", "Id: " + this.get(i).getField(id_field_name).getValue().toString());
-            Log.d("JSONSetList", "Setting: " + i + "# " + set_json.toString());
+//            Log.d("JSONSetList", "Id: " + this.get(i).getField(id_field_name).getValue().toString());
+//            Log.d("JSONSetList", "Setting: " + i + "# " + set_json.toString());
             json_array.put(set_json);
         }
 
         return json_array;
     }
 
-    public SetClass getByField(String field_name, Object value)
+    public JSONArray getAllUpdated_JSONObjects(String id_field_name) throws JSONException
+    {
+        return this.getAllUpdated_JSONObjects(new String[] { id_field_name });
+    }
+
+    public JSONSetList<SetClass> getByField(String field_name, Object value)
+    {
+        JSONSetList<SetClass> set_list = new JSONSetList();
+
+        for (int i = 0; i < this.size(); i++) {
+            if (this.get(i).getField(field_name).isEqual(value))
+                set_list.add(this.get(i));
+        }
+
+        return set_list;
+    }
+
+    public SetClass getByField_First(String field_name, Object value)
     {
         for (int i = 0; i < this.size(); i++) {
             if (this.get(i).getField(field_name).isEqual(value))

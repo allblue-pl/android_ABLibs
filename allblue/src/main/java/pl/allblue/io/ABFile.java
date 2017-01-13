@@ -16,6 +16,16 @@ import java.io.IOException;
 public class ABFile
 {
 
+    static public boolean Delete(Context context, String file_path)
+            throws FileNotFoundException
+    {
+        File file = new File(context.getFilesDir(), file_path);
+        if (!file.exists())
+            throw new FileNotFoundException();
+
+        return file.delete();
+    }
+
     static public String GetContent(Context context, String file_path)
             throws IOException
     {
@@ -37,11 +47,7 @@ public class ABFile
 
     static public boolean Exists(Context context, String file_path)
     {
-        File file = new File(context.getFilesDir(), file_path);
-        if (file.exists())
-            return true;
-
-        return false;
+        return (new File(context.getFilesDir(), file_path)).exists();
     }
 
     static public void PutContent(Context context, String file_path,

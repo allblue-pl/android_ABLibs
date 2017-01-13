@@ -52,6 +52,11 @@ public class EditTextValidator
         this.fields.add(f);
     }
 
+    public void addRegexp(final EditText edit_text, boolean required)
+    {
+        this.addRegexp(edit_text, required, null, "");
+    }
+
     public boolean validate()
     {
         boolean valid = true;
@@ -60,9 +65,17 @@ public class EditTextValidator
             RegexpField f = this.fields.get(i);
             String text = f.editText.getText().toString();
 
+            f.editText.clearFocus();
+
+            f.editText.setError(null);
+            Log.d("EditTextValidator", "Setting " + text);
+
             if (text.equals("")) {
                 if (f.required) {
                     f.editText.setError(this.context.getString(R.string.notValid_Empty));
+
+                    if (valid)
+                        f.editText.requestFocus();
                     valid = false;
                 }
 
@@ -77,6 +90,9 @@ public class EditTextValidator
 
             f.editText.setError(this.context.getString(R.string.notValid_Regexp) +
                     f.format);
+
+            if (valid)
+                f.editText.requestFocus();
             valid = false;
         }
 
