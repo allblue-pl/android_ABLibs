@@ -78,7 +78,7 @@ public class HttpRequest
 
             try {
                 if (url_connection != null) {
-                    error_message = "Post Exception: " + e.getMessage() +
+                    error_message = "JSON Exception: " + e.getMessage() +
                             ", response code: " + url_connection.getResponseCode();
                 } else
                     error_message = e.getMessage();
