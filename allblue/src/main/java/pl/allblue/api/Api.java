@@ -1,5 +1,6 @@
 package pl.allblue.api;
 
+import android.util.JsonWriter;
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -53,6 +54,8 @@ public class Api
 
         try {
             json = new JSONObject(http_response.getData());
+
+            Log.d("Api", "Response from `" + uri + "`: " + json.toString());
 
             result = json.getInt("result");
             message = json.getString("message");
