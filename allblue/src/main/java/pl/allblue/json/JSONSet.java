@@ -21,13 +21,18 @@ public class JSONSet
 
     }
 
+    public void delete()
+    {
+        this.state = State.DELETED;
+    }
+
     public JSONField getField(String field_name)
     {
         for (int i = 0; i < this.fields.size(); i++)
             if (this.fields.get(i).getName().equals(field_name))
                 return this.fields.get(i);
 
-        return null;
+        throw new AssertionError("Field `"  + field_name + "` does not exist.");
     }
 
     public List<JSONField> getFields()
@@ -74,6 +79,11 @@ public class JSONSet
         return this.state;
     }
 
+    public boolean isDeleted()
+    {
+        return this.state == State.DELETED;
+    }
+
     public boolean isUpdated()
     {
         return this.state == State.UPDATED;
@@ -90,9 +100,11 @@ public class JSONSet
         for (JSONField field : this.fields) {
             int index = field_names.indexOf(field.getName());
             if (index == -1) {
+                throw new AssertionError("Field `" + field.getName() +
+                        "` does not exist.");
 //                Log.w("JSONSet", "Cannot find field `" + field.getName() +
 //                        "` in: " + Arrays.toString(field_names.toArray()));
-                continue;
+                // continue;
             }
 
             field.read(json_array, index);
@@ -125,18 +137,11 @@ public class JSONSet
 
     public void update(JSONSet update_set)
     {
-        Log.d("JSONSet", "Update!");
-
         List<JSONField> update_fields = update_set.getFields();
         for (int i = 0; i < update_fields.size(); i++) {
             JSONField update_field = update_fields.get(i);
 
-            Log.d("JSONSet", "Set: " + update_field.getName() + " = " +
-                    update_field.getValue());
-
             if (update_field.isSet()) {
-                Log.d("JSONSet", "Set A: " + update_field.getName() + " = " +
-                        update_field.getValue());
                 this.getField(update_field.getName()).setValue(
                         update_field.getValue(), true);
             }
@@ -169,7 +174,8 @@ public class JSONSet
 
         NONE,
         NEW,
-        UPDATED
+        UPDATED,
+        DELETED
 
     }
 

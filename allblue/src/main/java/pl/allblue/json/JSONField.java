@@ -59,12 +59,8 @@ abstract public class JSONField<ValueClass>
         if (!this.value_Set)
             return false;
 
-        if (this.value == null) {
-            if (value == null)
-                return true;
-
-            return false;
-        }
+        if (this.value == null)
+            return value == null;
 
         if (value == null)
             return false;
@@ -110,13 +106,8 @@ abstract public class JSONField<ValueClass>
             return;
         }
 
-        /* Don't update when value is the same. */
-        Log.d("JSONField", "Comparing: " + this.getValue() + ":" + value);
-
         if (this.isEqual(value))
             return;
-
-        Log.d("JSONField", "Setting...");
 
         /* Update */
         this.updatedValue = value;

@@ -19,6 +19,9 @@ public class StringJSON extends JSONField<String>
     @Override
     protected boolean compareValue(String value)
     {
+        if (this.getValue() == null)
+            return value == null;
+
         return this.getValue().compareTo(value) == 0;
     }
 

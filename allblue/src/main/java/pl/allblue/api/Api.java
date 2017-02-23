@@ -60,8 +60,8 @@ public class Api
             result = json.getInt("result");
             message = json.getString("message");
 
-            if (json.has("EDEBUG")) {
-                Log.w("Api", "EDEBUG: " + json.getJSONArray("EDEBUG").toString());
+            if (json.has("log")) {
+                Log.w("Api", "Log: " + json.getJSONArray("log").toString());
             }
         } catch (Exception e) {
             json = new JSONObject();

@@ -76,6 +76,62 @@ public class JSONSetList<SetClass extends JSONSet> extends ArrayList<SetClass>
         this.addAll_JSONObjects(0, set_class, json_array, state);
     }
 
+    public void delete(SetClass json_set)
+    {
+        if (json_set.isNew()) {
+            this.remove(json_set);
+            return;
+        }
+
+        json_set.delete();
+    }
+
+    public void deleteBy(String compare_field_name, JSONSet delete_set)
+    {
+        JSONSetList set_list = this.getByField(compare_field_name,
+                delete_set.getField(compare_field_name).getValue());
+
+        for (int i = 0; i < set_list.size(); i++)
+            this.delete((SetClass)set_list.get(i));
+    }
+
+    public void deleteAllBy_JSONObjects(String compare_field_name,
+            Class<? extends JSONSet> set_class, JSONArray json_array) throws
+            IllegalAccessException, JSONException, InstantiationException
+    {
+        JSONSetList<JSONSet> set_list = JSONSetList.Create_FromObjects(set_class,
+                json_array);
+        for (int i = 0; i < set_list.size(); i++) {
+//            Log.d("JSONSetList", "Updating: " +
+//                    set_list.get(i).getField(compare_field_name).getValue());
+            this.deleteBy(compare_field_name, set_list.get(i));
+        }
+    }
+
+    public JSONArray getAll_JSONObjects(JSONSet.State state, String[] id_field_names) throws JSONException
+    {
+        JSONArray json_array = new JSONArray();
+        for (int i = 0; i < this.size(); i++) {
+            if (this.get(i).getState() != state)
+                continue;
+
+            JSONObject set_json = this.get(i).getJSONObject(true);
+            for (int j = 0; j < id_field_names.length; j++)
+                this.get(i).getField(id_field_names[j]).write(set_json, false);
+
+            //            Log.d("JSONSetList", "Id: " + this.get(i).getField(id_field_name).getValue().toString());
+            //            Log.d("JSONSetList", "Setting: " + i + "# " + set_json.toString());
+            json_array.put(set_json);
+        }
+
+        return json_array;
+    }
+
+    public JSONArray getAllDeleted_JSONObjects(String[] id_field_names) throws JSONException
+    {
+        return this.getAll_JSONObjects(JSONSet.State.DELETED, id_field_names);
+    }
+
     public JSONArray getAllNew_JSONObjects() throws JSONException
     {
         JSONArray json_array = new JSONArray();
@@ -91,26 +147,7 @@ public class JSONSetList<SetClass extends JSONSet> extends ArrayList<SetClass>
 
     public JSONArray getAllUpdated_JSONObjects(String[] id_field_names) throws JSONException
     {
-        JSONArray json_array = new JSONArray();
-        for (int i = 0; i < this.size(); i++) {
-            if (!this.get(i).isUpdated())
-                continue;
-
-            JSONObject set_json = this.get(i).getJSONObject(true);
-            for (int j = 0; j < id_field_names.length; j++)
-                this.get(i).getField(id_field_names[j]).write(set_json, false);
-
-//            Log.d("JSONSetList", "Id: " + this.get(i).getField(id_field_name).getValue().toString());
-//            Log.d("JSONSetList", "Setting: " + i + "# " + set_json.toString());
-            json_array.put(set_json);
-        }
-
-        return json_array;
-    }
-
-    public JSONArray getAllUpdated_JSONObjects(String id_field_name) throws JSONException
-    {
-        return this.getAllUpdated_JSONObjects(new String[] { id_field_name });
+        return this.getAll_JSONObjects(JSONSet.State.UPDATED, id_field_names);
     }
 
     public JSONSetList<SetClass> getByField(String field_name, Object value)
