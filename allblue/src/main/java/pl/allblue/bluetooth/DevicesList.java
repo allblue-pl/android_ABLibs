@@ -215,7 +215,7 @@ public class DevicesList extends ListActivity {
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        super.onCreateOptionsMenu(menu);
 //
-//        menu.add(0, Menu.FIRST, Menu.NONE, "Refresh Scanning");
+//        menu.add(0, Menu.FIRST, Menu.None, "Refresh Scanning");
 //
 //        return true;
 //    }

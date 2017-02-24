@@ -68,7 +68,6 @@ public class EditTextValidator
             f.editText.clearFocus();
 
             f.editText.setError(null);
-            Log.d("EditTextValidator", "Setting " + text);
 
             if (text.equals("")) {
                 if (f.required) {

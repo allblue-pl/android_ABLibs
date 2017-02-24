@@ -30,7 +30,7 @@ public class JSONSetList<SetClass extends JSONSet> extends ArrayList<SetClass>
             InstantiationException, JSONException
     {
         JSONSetList set_list = new JSONSetList();
-        set_list.addAll_JSONObjects(set_class, json_array, JSONSet.State.NONE);
+        set_list.addAll_JSONObjects(set_class, json_array, JSONSet.State.None);
 
         return set_list;
     }
@@ -108,11 +108,12 @@ public class JSONSetList<SetClass extends JSONSet> extends ArrayList<SetClass>
         }
     }
 
-    public JSONArray getAll_JSONObjects(JSONSet.State state, String[] id_field_names) throws JSONException
+    public JSONArray getAll_JSONObjects(JSONSet.State state,
+            String[] id_field_names) throws JSONException
     {
         JSONArray json_array = new JSONArray();
         for (int i = 0; i < this.size(); i++) {
-            if (this.get(i).getState() != state)
+            if (!this.get(i).isState(state))
                 continue;
 
             JSONObject set_json = this.get(i).getJSONObject(true);
@@ -127,9 +128,10 @@ public class JSONSetList<SetClass extends JSONSet> extends ArrayList<SetClass>
         return json_array;
     }
 
-    public JSONArray getAllDeleted_JSONObjects(String[] id_field_names) throws JSONException
+    public JSONArray getAllDeleted_JSONObjects(String[] id_field_names)
+            throws JSONException
     {
-        return this.getAll_JSONObjects(JSONSet.State.DELETED, id_field_names);
+        return this.getAll_JSONObjects(JSONSet.State.Deleted, id_field_names);
     }
 
     public JSONArray getAllNew_JSONObjects() throws JSONException
@@ -145,9 +147,10 @@ public class JSONSetList<SetClass extends JSONSet> extends ArrayList<SetClass>
         return json_array;
     }
 
-    public JSONArray getAllUpdated_JSONObjects(String[] id_field_names) throws JSONException
+    public JSONArray getAllUpdated_JSONObjects(String[] id_field_names)
+            throws JSONException
     {
-        return this.getAll_JSONObjects(JSONSet.State.UPDATED, id_field_names);
+        return this.getAll_JSONObjects(JSONSet.State.Updated, id_field_names);
     }
 
     public JSONSetList<SetClass> getByField(String field_name, Object value)

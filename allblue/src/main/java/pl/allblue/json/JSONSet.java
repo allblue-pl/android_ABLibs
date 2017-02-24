@@ -13,7 +13,7 @@ import java.util.List;
 public class JSONSet
 {
 
-    private State state = State.NONE;
+    private State state = State.None;
     private List<JSONField> fields = new ArrayList<>();
 
     public JSONSet()
@@ -23,7 +23,7 @@ public class JSONSet
 
     public void delete()
     {
-        this.state = State.DELETED;
+        this.state = State.Deleted;
     }
 
     public JSONField getField(String field_name)
@@ -74,24 +74,31 @@ public class JSONSet
         return this.getJSONObject(false);
     }
 
-    public State getState()
-    {
-        return this.state;
-    }
-
     public boolean isDeleted()
     {
-        return this.state == State.DELETED;
+        return this.state == State.Deleted;
     }
 
     public boolean isUpdated()
     {
-        return this.state == State.UPDATED;
+        return this.state == State.Updated;
     }
 
     public boolean isNew()
     {
-        return this.state == State.NEW;
+        return this.state == State.New;
+    }
+
+    public boolean isState(State state)
+    {
+        if (state == State.Deleted)
+            return this.isDeleted();
+        else if (state == state.Updated)
+            return this.isUpdated();
+        else if (state == State.New)
+            return this.isNew();
+
+        return false;
     }
 
     public void read(List<String> field_names, JSONArray json_array)
@@ -127,12 +134,12 @@ public class JSONSet
 
     public void setState_Updated()
     {
-        this.state = State.UPDATED;
+        this.state = State.Updated;
     }
 
     public void setState_New()
     {
-        this.state = State.NEW;
+        this.state = State.New;
     }
 
     public void update(JSONSet update_set)
@@ -172,10 +179,10 @@ public class JSONSet
     public enum State
     {
 
-        NONE,
-        NEW,
-        UPDATED,
-        DELETED
+        None,
+        New,
+        Updated,
+        Deleted
 
     }
 
