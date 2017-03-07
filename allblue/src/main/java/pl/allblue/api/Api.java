@@ -40,11 +40,11 @@ public class Api
             HttpRequest.Response http_response)
     {
         if (!http_response.isSuccess()) {
-            Log.d("Api", "Http Result Error (" + uri + "): " +
+            Log.d("Api", "Http EnableResult Error (" + uri + "): " +
                     http_response.getErrorMessage());
 
             return new Result(2,
-                "Http Result Error: " + http_response.getErrorMessage(),
+                "Http EnableResult Error: " + http_response.getErrorMessage(),
                 new JSONObject());
         }
 
