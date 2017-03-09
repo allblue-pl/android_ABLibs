@@ -59,6 +59,8 @@ public class BluetoothDevices
     public void setOnDiscoveredListener(OnDiscoveredListener listener)
     {
         this.listeners_OnBluetoothDeviceDiscovered = listener;
+        for (BluetoothDeviceInfo device_info : this.deviceInfos)
+            listener.onDiscovered(device_info);
     }
 
 
@@ -91,10 +93,12 @@ public class BluetoothDevices
             return;
 
         if (!this.devices_Exists(device)) {
-            this.deviceInfos.add(new BluetoothDeviceInfo(device, is_paired));
+            BluetoothDeviceInfo device_info = new BluetoothDeviceInfo(device,
+                    is_paired);
+            this.deviceInfos.add(device_info);
             if (this.listeners_OnBluetoothDeviceDiscovered != null) {
                 this.listeners_OnBluetoothDeviceDiscovered
-                        .onDiscovered(device);
+                        .onDiscovered(device_info);
             }
         }
     }
@@ -127,7 +131,7 @@ public class BluetoothDevices
     public interface OnDiscoveredListener
     {
 
-        void onDiscovered(BluetoothDevice device);
+        void onDiscovered(BluetoothDeviceInfo device_info);
 
     }
 

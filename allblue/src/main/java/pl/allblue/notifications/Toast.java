@@ -12,7 +12,7 @@ public class Toast
             @Override
             public void run() {
                 Context context = activity.getApplicationContext();
-                int duration = android.widget.Toast.LENGTH_SHORT;
+                int duration = android.widget.Toast.LENGTH_LONG;
 
                 android.widget.Toast toast = android.widget.Toast.makeText(
                         context, message, duration);

@@ -52,10 +52,9 @@ public class BluetoothDevicesActivity extends ListActivity
         this.devices.setOnDiscoveredListener(new BluetoothDevices.OnDiscoveredListener()
         {
             @Override
-            public void onDiscovered(BluetoothDevice device)
+            public void onDiscovered(BluetoothDeviceInfo device_info)
             {
-                self.devicesAdapter.add(device.getName() + ": " +
-                        device.getBluetoothClass().getMajorDeviceClass());
+                self.devicesAdapter.add(device_info.device.getName());
                 self.devicesAdapter.notifyDataSetInvalidated();
             }
         });
