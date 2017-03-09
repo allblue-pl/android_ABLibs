@@ -67,7 +67,7 @@ public class BluetoothDevicesActivity extends ListActivity
     @Override
     public void onDestroy()
     {
-        this.devices.finish(this);
+        this.devices.finishDiscovery(this);
 
         super.onDestroy();
     }

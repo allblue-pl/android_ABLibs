@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,21 +33,20 @@ public class BluetoothDevices
     public BluetoothDevices(int[] supported_device_classes)
     {
         this.supportedDeviceClasses = supported_device_classes;
+
         this.adapter = BluetoothAdapter.getDefaultAdapter();
+        for (BluetoothDevice bt_device : this.adapter.getBondedDevices())
+            this.devices_Add(bt_device, true);
     }
 
     public void discover(Activity activity)
     {
-        this.finish(activity);
-
-        for (BluetoothDevice bt_device : this.adapter.getBondedDevices())
-            this.devices_Add(bt_device, true);
+        this.finishDiscovery(activity);
         this.createReceiver(activity);
     }
 
-    public void finish(Activity activity)
+    public void finishDiscovery(Activity activity)
     {
-        this.deviceInfos.clear();
         if (this.receiver != null)
             activity.unregisterReceiver(this.receiver);
     }
