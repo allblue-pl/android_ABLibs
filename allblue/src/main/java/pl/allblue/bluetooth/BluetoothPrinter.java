@@ -8,6 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
 
+import org.json.JSONArray;
+
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -170,6 +172,11 @@ public class BluetoothPrinter
             socket_os.write(line_bytes);
 
         socket_os.flush();
+
+        JSONArray ja = new JSONArray();
+        for (int i = 0; i < image_bytes.length; i++)
+            ja.put(image_bytes[i]);
+        Log.d("BluetoothPrinter", "Length: " + image_bytes.length);
     }
 
 
