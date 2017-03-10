@@ -164,6 +164,11 @@ public class BluetoothPrinter
         byte[] line_bytes = BluetoothPrinter.GetBytes_Line();
         byte[] image_bytes = BluetoothPrinter.GetBytes_Image(image, width);
 
+        JSONArray ja = new JSONArray();
+        for (int i = 0; i < image_bytes.length; i++)
+            ja.put(image_bytes[i]);
+        Log.d("BluetoothPrinter", "Length: " + image_bytes.length);
+
         for (int i = 0; i < 3; i++)
             socket_os.write(line_bytes);
         socket_os.write(image_bytes);
@@ -172,11 +177,6 @@ public class BluetoothPrinter
             socket_os.write(line_bytes);
 
         socket_os.flush();
-
-        JSONArray ja = new JSONArray();
-        for (int i = 0; i < image_bytes.length; i++)
-            ja.put(image_bytes[i]);
-        Log.d("BluetoothPrinter", "Length: " + image_bytes.length);
     }
 
 
