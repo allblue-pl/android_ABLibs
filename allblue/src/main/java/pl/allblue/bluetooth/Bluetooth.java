@@ -74,27 +74,42 @@ public class Bluetooth
             final BluetoothDevice device, final String pin,
             final OnDevicePairedListener listener)
     {
+        activity.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                int bond_state = intent.getExtras().getInt(BluetoothDevice.EXTRA_BOND_STATE);
+                if (bond_state == BluetoothDevice.BOND_BONDING)
+                    return;
+
+                activity.unregisterReceiver(this);
+
+                if (bond_state == BluetoothDevice.BOND_BONDED) {
+                    if (listener != null)
+                        listener.onPaired(device);
+                }
+            }
+        }, new IntentFilter("android.bluetooth.device.action.BOND_STATE_CHANGED"));
+
         try {
             activity.registerReceiver(new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     try {
-                        byte[] pin_bytes = String.valueOf(pin).getBytes();
+                        if (pin != null) {
+                            byte[] pin_bytes = String.valueOf(pin).getBytes();
 
-                        device.getClass().getMethod("setPin", byte[].class)
-                                .invoke(device, pin_bytes);
-                        device.getClass().getMethod("setPairingConfirmation",
-                                boolean.class).invoke(device, false);
+                            device.getClass().getMethod("setPin", byte[].class)
+                                    .invoke(device, pin_bytes);
+                            device.getClass().getMethod("setPairingConfirmation",
+                                    boolean.class).invoke(device, false);
+                        }
 
                         activity.unregisterReceiver(this);
-
-                        if (listener != null)
-                            listener.onPaired(device);
                     } catch (Exception e) {
                         pl.allblue.notifications.Toast.ShowMessage(activity,
                                 activity.getResources().getString(
                                 R.string.bluetooth_Errors_CannotPairDevice));
-                        Log.d("Bluetooth", "Cannot pair bluetooth printer.", e);
+                        Log.e("Bluetooth", "Cannot pair bluetooth printer.", e);
                         return;
                     }
                 }

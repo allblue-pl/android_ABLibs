@@ -23,6 +23,11 @@ public class EditTextValidator
         this.context = context;
     }
 
+    public void addError(EditText edit_text, String error_message)
+    {
+
+    }
+
     public void addRegexp(final EditText edit_text, boolean required, String regexp,
             String format)
     {
