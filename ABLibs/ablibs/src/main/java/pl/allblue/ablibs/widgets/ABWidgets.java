@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 
+import junit.framework.Assert;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -52,9 +54,11 @@ public class ABWidgets
                             "id", context.getPackageName());
 
                     if (viewId == 0)
-                        throw new AssertionError("Cannot find widget: " + viewName);
+                        throw new AssertionError("Cannot get widget identifier: " + viewName);
 
                     View view = layoutView.findViewById(viewId);
+                    if (view == null)
+                        throw new AssertionError("Cannot find widget: " + viewName);
 
                     field.set(widgetsHolder, view);
                 } catch (Exception e) {
@@ -71,6 +75,14 @@ public class ABWidgets
     static public void FindAll(Context context, Object widgetsHolder,
             View layoutView, String layoutPrefix)
     {
+        ABWidgets.FindAll(context, widgetsHolder, layoutView, layoutPrefix, null);
+    }
+
+    static public void FindAll(Context context, Object widgetsHolder,
+            View layoutView, int layoutId)
+    {
+        String layoutPrefix = context.getResources().getResourceEntryName(layoutId);
+
         ABWidgets.FindAll(context, widgetsHolder, layoutView, layoutPrefix, null);
     }
 
