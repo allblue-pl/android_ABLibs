@@ -26,28 +26,35 @@ public class ABWidgets
 
             for (Field field : fields) {
                 try {
+                    String fieldName = field.getName();
                     if (!Modifier.isPublic(field.getModifiers()))
                         continue;
-
-                    String fieldName = null;
+                    if (!View.class.isAssignableFrom(field.getType()))
+                        continue;
 
                     if (idsPrefix != null) {
-                        if (field.getName().length() < idsPrefix.length() + 1)
+                        if (fieldName.length() < idsPrefix.length() + 1)
                             continue;
 
-                        if (!field.getName().substring(0, idsPrefix.length())
+                        if (!fieldName.substring(0, idsPrefix.length())
                                 .equals(idsPrefix))
                             continue;
 
-                        if (!Character.isUpperCase(field.getName().charAt(idsPrefix.length())))
+                        if (!Character.isUpperCase(fieldName.charAt(idsPrefix.length())))
                             continue;
 
-                        fieldName = field.getName().substring(idsPrefix.length());
-                    } else
-                        fieldName = field.getName();
+                        fieldName = fieldName.substring(idsPrefix.length());
+                    }
 
-                    if (!View.class.isAssignableFrom(field.getType()))
-                        continue;
+//                    if (!Modifier.isPublic(field.getModifiers())) {
+//                        throw new AssertionError("Widget field '" +
+//                                field.getName() + "' must be public.");
+//                    }
+
+//                    if (!View.class.isAssignableFrom(field.getType())) {
+//                        throw new AssertionError("Field '" + field.getName() +
+//                                "' type does not extend 'View'.");
+//                    }
 
                     String viewName = layoutPrefix + "_" + fieldName;
                     int viewId = context.getResources().getIdentifier(viewName,
@@ -59,6 +66,8 @@ public class ABWidgets
                     View view = layoutView.findViewById(viewId);
                     if (view == null)
                         throw new AssertionError("Cannot find widget: " + viewName);
+
+                    Log.d("ABWidgets", "Setting: " + field.getName() + " = " + (view == null));
 
                     field.set(widgetsHolder, view);
                 } catch (Exception e) {
