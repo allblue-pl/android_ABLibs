@@ -5,10 +5,22 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class ABImages
 {
+
+    static public byte[] ConvertToByteArray(Bitmap bitmap,
+            Bitmap.CompressFormat compressFormat, int quality)
+    {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(compressFormat, quality, stream);
+        byte[] byteArray = stream.toByteArray();
+        bitmap.recycle();
+
+        return byteArray;
+    }
 
     static public Bitmap CreateFromPath(String path)
     {
@@ -44,6 +56,19 @@ public class ABImages
         }
 
         return bitmap;
+    }
+
+    static public Bitmap ScaleToMin(Bitmap bitmap, int width, int height)
+    {
+        float fw = (float)width / (float)bitmap.getWidth();
+        float fh = (float)height / (float)bitmap.getHeight();
+        float f = Math.max(fw, fh);
+
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap,
+                (int)(f * bitmap.getWidth()), (int)(f * bitmap.getHeight()),
+                true);
+
+        return scaledBitmap;
     }
 
 }
