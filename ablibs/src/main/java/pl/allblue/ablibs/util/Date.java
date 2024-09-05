@@ -15,29 +15,42 @@ public class Date
     static final public long Span_Day   =  86400;
 
 
+    static private int UTCOffset = 0;
     static private String Date_Format = null;
 
-    static public Calendar GetCalendar()
-    {
-        return Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+
+    static public long getDay(long time) {
+        return Date.getDay_UTC(time) - Date.UTCOffset * Date.Span_Hour;
     }
 
-    static public long GetMillis(int year, int month, int day)
-    {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-        calendar.set(year, month, day, 0, 0, 0);
-
-        return calendar.getTimeInMillis();
+    static public long getDay() {
+        return Date.getDay(Date.getTime());
     }
 
-    static public long GetSeconds(int year, int month, int day)
-    {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-        calendar.set(year, month, day, 0, 0, 0);
+    static public long getDay_UTC(long time) {
+        return (long)(Math.floor((double)time / Date.Span_Day) *
+                Date.Span_Day);
+    }
 
-        return calendar.getTimeInMillis() / 1000;
+    static public long getDay_UTC() {
+        return Date.getDay_UTC(Date.getTime());
+    }
+
+    static public long getTime() {
+        return Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+                .getTimeInMillis() / 1000l;
+    }
+
+    static public long getTime_Rel(long time) {
+        return time + Date.UTCOffset * Date.Span_Hour;
+    }
+
+    static public long getTime_Rel() {
+        return Date.getTime_Rel(Date.UTCOffset);
+    }
+
+    static public long getTime_RelNeg() {
+        return Date.getTime_Rel(-Date.UTCOffset);
     }
 
     static public String Format_Date(Long time)

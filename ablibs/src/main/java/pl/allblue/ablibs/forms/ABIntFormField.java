@@ -2,6 +2,7 @@ package pl.allblue.ablibs.forms;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,15 +12,15 @@ import com.google.android.material.textfield.TextInputLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ABTextFormField extends ABFormField {
+public class ABIntFormField extends ABFormField {
 
     private AppCompatActivity activity;
     private TextInputEditText editText;
     private TextInputLayout layout;
 
-    public ABTextFormField(AppCompatActivity activity, TextInputEditText editText,
-            TextInputLayout layout) {
-        final ABTextFormField self = this;
+    public ABIntFormField(AppCompatActivity activity,
+            TextInputEditText editText, TextInputLayout layout) {
+        final ABIntFormField self = this;
 
         this.activity = activity;
         this.editText = editText;
@@ -43,23 +44,22 @@ public class ABTextFormField extends ABFormField {
         });
     }
 
-    public String getValue() {
-        return this.editText.getText().toString();
+    public Integer getValue() {
+        return this.editText.getText().toString().equals("") ?
+                null : Integer.valueOf(this.editText.getText().toString());
     }
 
-    public void setValue(String value) {
-        if (this.getValue().equals(value))
+    public void setValue(Integer value) {
+        if (this.getValue() == value)
             return;
 
-        this.editText.setText(value);
+        this.editText.setText(value == null ? "" : value.toString());
         this.notifyValueChanged();
 
-        if (this.layout.getEndIconMode() == TextInputLayout.END_ICON_CLEAR_TEXT) {
-            this.layout.setEndIconMode(TextInputLayout.END_ICON_NONE);
-            this.layout.setEndIconMode(TextInputLayout.END_ICON_CLEAR_TEXT);
-            this.layout.setEndIconVisible(this.editText.isEnabled() &&
-                    !this.editText.getText().toString().equals(""));
-        }
+        this.layout.setEndIconMode(TextInputLayout.END_ICON_NONE);
+        this.layout.setEndIconMode(TextInputLayout.END_ICON_CLEAR_TEXT);
+        this.layout.setEndIconVisible(this.editText.isEnabled() &&
+                !this.editText.getText().toString().equals(""));
     }
 
 
@@ -71,7 +71,8 @@ public class ABTextFormField extends ABFormField {
     @Override
     public void putValueInJSONObject(JSONObject row, String fieldName) throws
             JSONException {
-        row.put(fieldName, this.editText.getText().toString());
+        row.put(fieldName, this.getValue() == null ?
+                JSONObject.NULL : this.getValue());
     }
 
     @Override
@@ -85,8 +86,8 @@ public class ABTextFormField extends ABFormField {
     public void setValueFromJSONObject(JSONObject row, String fieldName) throws
             JSONException {
         if (row.isNull(fieldName))
-            this.setValue("");
+            this.setValue(null);
         else
-            this.setValue(row.getString(fieldName));
+            this.setValue(row.getInt(fieldName));
     }
 }

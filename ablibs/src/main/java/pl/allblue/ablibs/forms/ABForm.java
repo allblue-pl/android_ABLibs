@@ -1,16 +1,7 @@
 package pl.allblue.ablibs.forms;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.util.Pair;
-import android.view.KeyEvent;
-import android.widget.EditText;
 import android.widget.TextView;
-
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,14 +14,51 @@ public class ABForm {
 
     private HashMap<String, ABFormField> fields;
     private TextView messageView;
+    private State state;
 
     public ABForm() {
         this.fields = new HashMap<>();
         this.messageView = null;
+        this.state = State.NOT_SET;
     }
 
     public void addField(String fieldName, ABFormField field) {
+        field.addOnValueChangedListener(() -> {
+            this.notifyFieldValueChanged();
+        });
         this.fields.put(fieldName, field);
+    }
+
+    public State getState() {
+        return this.state;
+    }
+
+    public JSONObject getValues() {
+        JSONObject row = new JSONObject();
+
+        Iterator<String> i = this.fields.keySet().iterator();
+        while (i.hasNext()) {
+            String fieldName = i.next();
+            try {
+                this.fields.get(fieldName).putValueInJSONObject(row, fieldName);
+            } catch (JSONException e) {
+                Log.e("ABForm", "Cannot put '" + fieldName +
+                        "' value in row.");
+            }
+        }
+
+        return row;
+    }
+
+    public void notifyFieldValueChanged() {
+        if (this.state == State.NOT_SET)
+            return;
+
+        this.state = State.CHANGED;
+    }
+
+    public void resetState() {
+        this.state = State.NOT_SET;
     }
 
     public void setField_Message(TextView messageView) {
@@ -53,8 +81,6 @@ public class ABForm {
 
     public void setValidatorInfo(JSONObject validatorInfo)
     {
-        Log.d("Test", validatorInfo.toString());
-
         try {
             JSONObject vFields = validatorInfo.getJSONObject("fields");
             Iterator<String> i = vFields.keys();
@@ -82,5 +108,29 @@ public class ABForm {
             Log.e("ABForm", "Cannot parse validator info.", e);
         }
     }
+
+    public void setValues(JSONObject row) {
+        Iterator<String> i = this.fields.keySet().iterator();
+        while (i.hasNext()) {
+            String fieldName = i.next();
+            if (!row.has(fieldName))
+                Log.d("ABForm", "No '" + fieldName + "' value in row.");
+            try {
+                this.fields.get(fieldName).setValueFromJSONObject(row, fieldName);
+            } catch (JSONException e) {
+                Log.e("ABForm", "Cannot get '" + fieldName +
+                        "' value from row.", e);
+            }
+        }
+
+        this.state = State.NOT_CHANGED;
+    }
+
+
+    public enum State {
+        NOT_SET,
+        NOT_CHANGED,
+        CHANGED
+    };
 
 }

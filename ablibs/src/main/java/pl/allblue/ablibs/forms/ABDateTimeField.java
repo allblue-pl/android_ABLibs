@@ -1,20 +1,18 @@
 package pl.allblue.ablibs.forms;
 
-import android.app.Activity;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import pl.allblue.ablibs.R;
 import pl.allblue.ablibs.util.Date;
@@ -25,31 +23,21 @@ public class ABDateTimeField extends ABFormField {
     private TextInputEditText editText;
     private TextInputLayout layout;
 
-    private Long dateTime;
+    private Long value;
+    private Long defaultValue;
 
     public ABDateTimeField(AppCompatActivity activity, TextInputEditText editText,
-            TextInputLayout layout) {
+            TextInputLayout layout, Long defaultValue) {
+        final ABDateTimeField self = this;
+
         this.activity = activity;
         this.editText = editText;
         this.layout = layout;
 
-        this.dateTime = null;
+        this.value = null;
+        this.defaultValue = defaultValue;
 
-        MaterialDatePicker<Long> mdp = MaterialDatePicker.Builder
-            .datePicker()
-            .setTitleText(activity.getString(R.string.text_select_date))
-            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-            .build();
-        mdp.addOnPositiveButtonClickListener(selection -> {
-            Log.d("Test", selection == null ?
-                    "Date: NULL" : ("Date: " + selection));
-            this.dateTime = selection / 1000;
-            this.editText.setText(Date.Format_Date(dateTime));
-//            this.layout.requestFocus(View.FOCUS_FORWARD);
-            View view = this.editText.focusSearch(View.FOCUS_DOWN);
-            view.requestFocus();
-        });
-
+        editText.setText("");
         editText.setInputType(InputType.TYPE_NULL);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -64,25 +52,62 @@ public class ABDateTimeField extends ABFormField {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s == null) {
-                    Log.d("Test", "Test: null");
-                }
-
-                Log.d("Test", "Test: " + s.toString());
+                if (s.toString().isEmpty())
+                    self.value = null;
             }
         });
         editText.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus)
                 return;
 
-            mdp.show(this.activity.getSupportFragmentManager(),
-                    "abDateTimeField");
+            this.showMaterialDatePicker();
         });
         editText.setOnClickListener(v -> {
-            mdp.show(this.activity.getSupportFragmentManager(),
-                    "abDateTimeField");
+            this.showMaterialDatePicker();
         });
     }
+
+    public void setValue(Long value) {
+        if (value == this.value)
+            return;
+
+        if (value == null) {
+            this.value = null;
+            this.editText.setText("");
+            this.notifyValueChanged();
+            return;
+        }
+
+        this.value = value;
+        this.editText.setText(Date.Format_Date(value));
+        this.notifyValueChanged();
+
+        this.layout.setEndIconMode(TextInputLayout.END_ICON_NONE);
+        this.layout.setEndIconMode(TextInputLayout.END_ICON_CLEAR_TEXT);
+        this.layout.setEndIconVisible(this.editText.isEnabled() &&
+                !this.editText.getText().toString().equals(""));
+    }
+
+
+    private void showMaterialDatePicker() {
+        MaterialDatePicker<Long> mdp = MaterialDatePicker.Builder
+            .datePicker()
+            .setTitleText(activity.getString(R.string.text_select_date))
+            .setSelection(this.value == null ? this.defaultValue * 1000l :
+                    this.value * 1000l)
+            .build();
+
+        mdp.addOnPositiveButtonClickListener(selection -> {
+            this.setValue(selection / 1000);
+
+//            View view = this.editText.focusSearch(View.FOCUS_DOWN);
+//            view.requestFocus();
+        });
+
+        mdp.show(this.activity.getSupportFragmentManager(),
+                "abDateTimeField");
+    }
+
 
     @Override
     public void clear() {
@@ -90,9 +115,21 @@ public class ABDateTimeField extends ABFormField {
     }
 
     @Override
+    public void putValueInJSONObject(JSONObject row, String fieldName)
+            throws JSONException {
+        row.put(fieldName, this.value == null ? JSONObject.NULL : this.value);
+    }
+
+    @Override
     public void setError(String message) {
         this.activity.runOnUiThread(() -> {
             this.layout.setError(message);
         });
+    }
+
+    @Override
+    public void setValueFromJSONObject(JSONObject row, String fieldName)
+            throws JSONException {
+        this.setValue(row.isNull(fieldName) ? null :  row.getLong(fieldName));
     }
 }

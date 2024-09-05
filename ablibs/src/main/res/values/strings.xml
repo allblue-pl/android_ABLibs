@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">ABLibs</string>
     <string name="text_select_date">Wybierz datę</string>
+    <string name="text_ok">Ok</string>
 </resources>
