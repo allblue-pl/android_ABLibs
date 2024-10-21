@@ -14,10 +14,12 @@ import com.google.android.material.textfield.TextInputLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.TimeZone;
+
 import pl.allblue.ablibs.R;
 import pl.allblue.ablibs.util.Date;
 
-public class ABDateTimeField extends ABFormField {
+public class ABDateField extends ABFormField {
 
     private AppCompatActivity activity;
     private TextInputEditText editText;
@@ -25,10 +27,11 @@ public class ABDateTimeField extends ABFormField {
 
     private Long value;
     private Long defaultValue;
+    private boolean utc;
 
-    public ABDateTimeField(AppCompatActivity activity, TextInputEditText editText,
-            TextInputLayout layout, Long defaultValue) {
-        final ABDateTimeField self = this;
+    public ABDateField(AppCompatActivity activity, TextInputEditText editText,
+            TextInputLayout layout, Long defaultValue, boolean utc) {
+        final ABDateField self = this;
 
         this.activity = activity;
         this.editText = editText;
@@ -36,6 +39,7 @@ public class ABDateTimeField extends ABFormField {
 
         this.value = null;
         this.defaultValue = defaultValue;
+        this.utc = utc;
 
         editText.setText("");
         editText.setInputType(InputType.TYPE_NULL);
@@ -67,7 +71,15 @@ public class ABDateTimeField extends ABFormField {
         });
     }
 
+    public ABDateField(AppCompatActivity activity, TextInputEditText editText,
+            TextInputLayout layout, Long defaultValue) {
+        this(activity, editText, layout, defaultValue, true);
+    }
+
     public void setValue(Long value) {
+        if (value != null)
+            value = utc ? Date.getDay_UTC(value) : Date.getDay(value);
+
         if (value == this.value)
             return;
 
@@ -79,7 +91,8 @@ public class ABDateTimeField extends ABFormField {
         }
 
         this.value = value;
-        this.editText.setText(Date.Format_Date(value));
+        this.editText.setText(utc ? Date.format_Date_UTC(value) :
+                Date.format_Date(value));
         this.notifyValueChanged();
 
         this.layout.setEndIconMode(TextInputLayout.END_ICON_NONE);
@@ -90,15 +103,23 @@ public class ABDateTimeField extends ABFormField {
 
 
     private void showMaterialDatePicker() {
+        TimeZone userTimeZone = TimeZone.getDefault();
+
+        long parsedValue = (value == null ? defaultValue : value) * 1000l;
+        if (!utc) {
+            parsedValue += Date.getUTCOffset_Seconds(value == null ?
+                    defaultValue : value) * 1000l;
+        }
+
         MaterialDatePicker<Long> mdp = MaterialDatePicker.Builder
             .datePicker()
             .setTitleText(activity.getString(R.string.text_select_date))
-            .setSelection(this.value == null ? this.defaultValue * 1000l :
-                    this.value * 1000l)
+            .setSelection(parsedValue)
             .build();
 
         mdp.addOnPositiveButtonClickListener(selection -> {
-            this.setValue(selection / 1000);
+            long time = selection / 1000l;
+            this.setValue(time + (utc ? 0 : Date.getUTCOffset_Seconds(time)));
 
 //            View view = this.editText.focusSearch(View.FOCUS_DOWN);
 //            view.requestFocus();

@@ -49,8 +49,7 @@ public class ABStrings {
     }
 
 
-    static private String getLangSpecialCharacters(EnumSet<Langs> langs)
-    {
+    static private String getLangSpecialCharacters(EnumSet<Langs> langs) {
         String chars = "";
         if (langs.contains(Langs.PL))
             chars += "ąćęłńóśźż" + "ĄĆĘŁŃÓŚŹŻ";

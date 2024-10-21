@@ -79,8 +79,7 @@ public class ABForm {
         this.messageView.setVisibility(TextView.VISIBLE);
     }
 
-    public void setValidatorInfo(JSONObject validatorInfo)
-    {
+    public void setValidatorInfo(JSONObject validatorInfo) {
         try {
             JSONObject vFields = validatorInfo.getJSONObject("fields");
             Iterator<String> i = vFields.keys();
