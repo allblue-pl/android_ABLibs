@@ -76,6 +76,10 @@ public class ABDateField extends ABFormField {
         this(activity, editText, layout, defaultValue, true);
     }
 
+    public Long getValue() {
+        return this.value;
+    }
+
     public void setValue(Long value) {
         if (value != null)
             value = utc ? Date.getDay_UTC(value) : Date.getDay(value);
