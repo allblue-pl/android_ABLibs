@@ -26,11 +26,11 @@ public class ABDateField extends ABFormField {
     private TextInputLayout layout;
 
     private Long value;
-    private Long defaultValue;
+    private long defaultValue;
     private boolean utc;
 
     public ABDateField(AppCompatActivity activity, TextInputEditText editText,
-            TextInputLayout layout, Long defaultValue, boolean utc) {
+            TextInputLayout layout, long defaultValue, boolean utc) {
         final ABDateField self = this;
 
         this.activity = activity;
@@ -76,6 +76,10 @@ public class ABDateField extends ABFormField {
         this(activity, editText, layout, defaultValue, true);
     }
 
+    public String getLabel() {
+        return editText.getHint().toString();
+    }
+
     public Long getValue() {
         return this.value;
     }
@@ -109,7 +113,8 @@ public class ABDateField extends ABFormField {
     private void showMaterialDatePicker() {
         TimeZone userTimeZone = TimeZone.getDefault();
 
-        long parsedValue = (value == null ? defaultValue : value) * 1000l;
+        long parsedValue = value == null ? defaultValue : value;
+        parsedValue *= 1000l;
         if (!utc) {
             parsedValue += Date.getUTCOffset_Seconds(value == null ?
                     defaultValue : value) * 1000l;

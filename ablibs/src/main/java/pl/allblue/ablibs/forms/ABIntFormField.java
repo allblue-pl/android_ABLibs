@@ -20,8 +20,6 @@ public class ABIntFormField extends ABFormField {
 
     public ABIntFormField(AppCompatActivity activity,
             TextInputEditText editText, TextInputLayout layout) {
-        final ABIntFormField self = this;
-
         this.activity = activity;
         this.editText = editText;
         this.layout = layout;
@@ -39,9 +37,13 @@ public class ABIntFormField extends ABFormField {
 
             @Override
             public void afterTextChanged(Editable s) {
-                self.notifyValueChanged();
+                notifyValueChanged();
             }
         });
+    }
+
+    public String getLabel() {
+        return editText.getHint().toString();
     }
 
     public Integer getValue() {
@@ -56,10 +58,10 @@ public class ABIntFormField extends ABFormField {
         this.editText.setText(value == null ? "" : value.toString());
         this.notifyValueChanged();
 
-        this.layout.setEndIconMode(TextInputLayout.END_ICON_NONE);
-        this.layout.setEndIconMode(TextInputLayout.END_ICON_CLEAR_TEXT);
-        this.layout.setEndIconVisible(this.editText.isEnabled() &&
-                !this.editText.getText().toString().equals(""));
+//        this.layout.setEndIconMode(TextInputLayout.END_ICON_NONE);
+//        this.layout.setEndIconMode(TextInputLayout.END_ICON_CLEAR_TEXT);
+//        this.layout.setEndIconVisible(this.editText.isEnabled() &&
+//                !this.editText.getText().toString().equals(""));
     }
 
 

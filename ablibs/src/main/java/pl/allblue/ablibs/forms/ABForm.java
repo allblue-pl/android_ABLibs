@@ -7,42 +7,52 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class ABForm {
 
-    private HashMap<String, ABFormField> fields;
+    private List<String> fieldNames;
+    private List<ABFormField> fields;
+
     private TextView messageView;
     private State state;
 
     public ABForm() {
-        this.fields = new HashMap<>();
+        this.fieldNames = new ArrayList<>();
+        this.fields = new ArrayList<>();
         this.messageView = null;
         this.state = State.NOT_SET;
     }
 
     public void addField(String fieldName, ABFormField field) {
         field.addOnValueChangedListener(() -> {
-            this.notifyFieldValueChanged();
+            notifyFieldValueChanged();
         });
-        this.fields.put(fieldName, field);
+        fieldNames.add(fieldName);
+        fields.add(field);
+    }
+
+    public void clearValues() {
+        for (int i = 0; i < fields.size(); i++)
+            fields.get(i).clear();
     }
 
     public State getState() {
-        return this.state;
+        return state;
     }
 
     public JSONObject getValues() {
         JSONObject row = new JSONObject();
 
-        Iterator<String> i = this.fields.keySet().iterator();
-        while (i.hasNext()) {
-            String fieldName = i.next();
+        for (int i = 0; i < fieldNames.size(); i++) {
             try {
-                this.fields.get(fieldName).putValueInJSONObject(row, fieldName);
+                fields.get(i).putValueInJSONObject(row, fieldNames.get(i));
             } catch (JSONException e) {
-                Log.e("ABForm", "Cannot put '" + fieldName +
+                Log.e("ABForm", "Cannot put '" + fieldNames.get(i) +
                         "' value in row.");
             }
         }
@@ -51,32 +61,32 @@ public class ABForm {
     }
 
     public void notifyFieldValueChanged() {
-        if (this.state == State.NOT_SET)
+        if (state == State.NOT_SET)
             return;
 
-        this.state = State.CHANGED;
+        state = State.CHANGED;
     }
 
     public void resetState() {
-        this.state = State.NOT_SET;
+        state = State.NOT_SET;
     }
 
     public void setField_Message(TextView messageView) {
-        this.messageView = messageView;
+        messageView = messageView;
     }
 
     public void setMessage_Failure(String message) {
-        if (this.messageView == null)
+        if (messageView == null)
             return;
 
         if (message == null) {
-            this.messageView.setText("");
-            this.messageView.setVisibility(TextView.INVISIBLE);
+            messageView.setText("");
+            messageView.setVisibility(TextView.INVISIBLE);
             return;
         }
 
-        this.messageView.setText(message);
-        this.messageView.setVisibility(TextView.VISIBLE);
+        messageView.setText(message);
+        messageView.setVisibility(TextView.VISIBLE);
     }
 
     public void setValidatorInfo(JSONObject validatorInfo) {
@@ -85,13 +95,14 @@ public class ABForm {
             Iterator<String> i = vFields.keys();
             while (i.hasNext()) {
                 String fieldName = i.next();
-                if (!this.fields.containsKey(fieldName))
+                int fieldIndex = fieldNames.indexOf(fieldName);
+                if (fieldIndex == -1)
                     continue;
 
                 JSONObject vField = vFields.getJSONObject(
                         fieldName);
                 if (vField.getBoolean("valid"))
-                    this.fields.get(fieldName).setError(null);
+                    fields.get(fieldIndex).setError(null);
                 else {
                     JSONArray errorsArr = vField.getJSONArray("errors");
                     String error = "";
@@ -100,7 +111,7 @@ public class ABForm {
                             error += " ";
                         error += errorsArr.get(j);
                     }
-                    this.fields.get(fieldName).setError(error);
+                    fields.get(fieldIndex).setError(error);
                 }
             }
         } catch (JSONException e) {
@@ -109,20 +120,19 @@ public class ABForm {
     }
 
     public void setValues(JSONObject row) {
-        Iterator<String> i = this.fields.keySet().iterator();
-        while (i.hasNext()) {
-            String fieldName = i.next();
+        for (int i = 0; i < fieldNames.size(); i++) {
+            String fieldName = fieldNames.get(i);
             if (!row.has(fieldName))
                 Log.d("ABForm", "No '" + fieldName + "' value in row.");
             try {
-                this.fields.get(fieldName).setValueFromJSONObject(row, fieldName);
+                fields.get(i).setValueFromJSONObject(row, fieldName);
             } catch (JSONException e) {
                 Log.e("ABForm", "Cannot get '" + fieldName +
                         "' value from row.", e);
             }
         }
 
-        this.state = State.NOT_CHANGED;
+        state = State.NOT_CHANGED;
     }
 
 

@@ -33,6 +33,7 @@ abstract public class ABFormField {
 
 
     abstract public void clear();
+    abstract public String getLabel();
     abstract public void putValueInJSONObject(JSONObject row, String fieldName)
             throws JSONException;
     abstract public void setError(String message);

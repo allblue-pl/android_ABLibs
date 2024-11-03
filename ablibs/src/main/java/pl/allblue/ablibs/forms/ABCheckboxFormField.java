@@ -30,6 +30,10 @@ public class ABCheckboxFormField extends ABFormField {
         });
     }
 
+    public String getLabel() {
+        return checkbox.getHint().toString();
+    }
+
     public boolean getValue() {
         return this.checkbox.isChecked();
     }

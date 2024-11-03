@@ -20,13 +20,11 @@ public class ABTextFormField extends ABFormField {
 
     public ABTextFormField(AppCompatActivity activity, TextInputEditText editText,
             TextInputLayout layout) {
-        final ABTextFormField self = this;
-
         this.activity = activity;
         this.editText = editText;
         this.layout = layout;
 
-        this.editText.addTextChangedListener(new TextWatcher() {
+        editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -39,46 +37,50 @@ public class ABTextFormField extends ABFormField {
 
             @Override
             public void afterTextChanged(Editable s) {
-                self.notifyValueChanged();
+                notifyValueChanged();
             }
         });
     }
 
+    public String getLabel() {
+        return editText.getHint().toString();
+    }
+
     public String getValue() {
-        return this.editText.getText().toString();
+        return editText.getText().toString();
     }
 
     public void setValue(String value) {
-        if (this.getValue().equals(value))
+        if (getValue().equals(value))
             return;
 
-        this.editText.setText(value);
-        this.notifyValueChanged();
+        editText.setText(value);
+        notifyValueChanged();
 
-        if (this.layout.getEndIconMode() == TextInputLayout.END_ICON_CLEAR_TEXT) {
-            this.layout.setEndIconMode(TextInputLayout.END_ICON_NONE);
-            this.layout.setEndIconMode(TextInputLayout.END_ICON_CLEAR_TEXT);
-            this.layout.setEndIconVisible(this.editText.isEnabled() &&
-                    !this.editText.getText().toString().equals(""));
+        if (layout.getEndIconMode() == TextInputLayout.END_ICON_CLEAR_TEXT) {
+            layout.setEndIconMode(TextInputLayout.END_ICON_NONE);
+            layout.setEndIconMode(TextInputLayout.END_ICON_CLEAR_TEXT);
+            layout.setEndIconVisible(editText.isEnabled() &&
+                    !editText.getText().toString().equals(""));
         }
     }
 
 
     @Override
     public void clear() {
-        this.editText.setText("");
+        editText.setText("");
     }
 
     @Override
     public void putValueInJSONObject(JSONObject row, String fieldName) throws
             JSONException {
-        row.put(fieldName, this.editText.getText().toString());
+        row.put(fieldName, editText.getText().toString());
     }
 
     @Override
     public void setError(String message) {
-        this.activity.runOnUiThread(() -> {
-            this.layout.setError(message);
+        activity.runOnUiThread(() -> {
+            layout.setError(message);
         });
     }
 
@@ -86,8 +88,8 @@ public class ABTextFormField extends ABFormField {
     public void setValueFromJSONObject(JSONObject row, String fieldName) throws
             JSONException {
         if (row.isNull(fieldName))
-            this.setValue("");
+            setValue("");
         else
-            this.setValue(row.getString(fieldName));
+            setValue(row.getString(fieldName));
     }
 }
