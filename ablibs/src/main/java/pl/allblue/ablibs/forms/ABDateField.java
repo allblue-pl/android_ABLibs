@@ -29,6 +29,8 @@ public class ABDateField extends ABFormField {
     private long defaultValue;
     private boolean utc;
 
+    private boolean hideHintWhenNotEmpty = false;
+
     public ABDateField(AppCompatActivity activity, TextInputEditText editText,
             TextInputLayout layout, long defaultValue, boolean utc) {
         final ABDateField self = this;
@@ -56,8 +58,11 @@ public class ABDateField extends ABFormField {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().isEmpty())
+                if (s.toString().isEmpty()) {
                     self.value = null;
+                    if (hideHintWhenNotEmpty)
+                        layout.setHintEnabled(true);
+                }
             }
         });
         editText.setOnFocusChangeListener((v, hasFocus) -> {
@@ -84,6 +89,10 @@ public class ABDateField extends ABFormField {
         return this.value;
     }
 
+    public void setHideHintWhenNotEmpty(boolean hideHintWhenNotEmpty_) {
+        hideHintWhenNotEmpty = hideHintWhenNotEmpty_;
+    }
+
     public void setValue(Long value) {
         if (value != null)
             value = utc ? Date.getDay_UTC(value) : Date.getDay(value);
@@ -95,6 +104,8 @@ public class ABDateField extends ABFormField {
             this.value = null;
             this.editText.setText("");
             this.notifyValueChanged();
+            if (hideHintWhenNotEmpty)
+                layout.setHintEnabled(true);
             return;
         }
 
@@ -107,6 +118,9 @@ public class ABDateField extends ABFormField {
         this.layout.setEndIconMode(TextInputLayout.END_ICON_CLEAR_TEXT);
         this.layout.setEndIconVisible(this.editText.isEnabled() &&
                 !this.editText.getText().toString().equals(""));
+
+        if (hideHintWhenNotEmpty)
+            layout.setHintEnabled(false);
     }
 
 
