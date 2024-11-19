@@ -1,6 +1,9 @@
 package pl.allblue.ablibs.util;
 
+import android.util.Log;
+
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -85,4 +88,15 @@ public class Date
         Date.timeZone = TimeZone.getTimeZone(timeZone);
     }
 
+    static public long strToTime_Date_UTC(String dateStr) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(date_Format);
+        try {
+            java.util.Date date = dateFormat.parse(dateStr);
+            return (date.getTime() + TimeZone.getDefault()
+                    .getRawOffset()) / 1000l;
+        } catch (ParseException e) {
+            Log.e("Date", "Cannot parse date string.", e);
+            return 0;
+        }
+    }
 }
