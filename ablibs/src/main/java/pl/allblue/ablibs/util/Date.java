@@ -17,7 +17,9 @@ public class Date
     static final public long SPAN_HOUR  =  3600;
     static final public long SPAN_DAY   =  86400;
 
-    static private String date_Format = null;
+    static private String date_Format = "yyyy-MM-dd";
+    static private String dateTime_Format = "yyyy-MM-dd HH:mm";
+
     static private TimeZone timeZone = TimeZone.getTimeZone("UTC");
 
     static public long getDay(long time) {
@@ -80,8 +82,30 @@ public class Date
         return dateFormat.format(new java.util.Date(time * 1000l));
     }
 
+    static public String format_DateTime(Long time) {
+        if (time == null)
+            return "-";
+
+        DateFormat dateFormat = new SimpleDateFormat(dateTime_Format);
+        dateFormat.setTimeZone(timeZone);
+        return dateFormat.format(new java.util.Date(time * 1000l));
+    }
+
+    static public String format_DateTime_UTC(Long time) {
+        if (time == null)
+            return "-";
+
+        DateFormat dateFormat = new SimpleDateFormat(dateTime_Format);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return dateFormat.format(new java.util.Date(time * 1000l));
+    }
+
     static public void setFormat_Date(String date_format) {
         Date.date_Format = date_format;
+    }
+
+    static public void setFormat_DateTime(String dateTime_format) {
+        Date.dateTime_Format = dateTime_format;
     }
 
     static public void setTimeZone(String timeZone) {

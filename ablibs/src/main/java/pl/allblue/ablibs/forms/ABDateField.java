@@ -59,7 +59,8 @@ public class ABDateField extends ABFormField {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().isEmpty()) {
-                    self.value = null;
+                    value = null;
+                    notifyValueChanged();
                     if (hideHintWhenNotEmpty)
                         layout.setHintEnabled(true);
                 }
