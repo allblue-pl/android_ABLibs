@@ -20,5 +20,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "ABLibs"
-include(":app")
 include(":ablibs")
