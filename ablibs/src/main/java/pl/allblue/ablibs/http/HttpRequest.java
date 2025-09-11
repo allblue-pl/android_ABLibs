@@ -11,7 +11,6 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
@@ -20,27 +19,27 @@ public class HttpRequest {
     static public final int TIMEOUT = 300000;
 
 
-    static public void Post(final String uri, final Map<String, String> fields,
+    static public void post(final String uri, final Map<String, String> fields,
                             final ResponseListener response_listener, final String id) {
         Thread thread = new Thread(() -> {
-            Response response = HttpRequest.Post_Sync(uri, fields);
+            Response response = HttpRequest.post_Sync(uri, fields);
             response_listener.onResponseReceived(response, id);
         });
 
         thread.start();
     }
 
-    static public void Post(final String uri, final Map<String, String> fields,
+    static public void post(final String uri, final Map<String, String> fields,
                             final ResponseListener response_listener) {
-        HttpRequest.Post(uri, fields, response_listener, null);
+        HttpRequest.post(uri, fields, response_listener, null);
     }
 
-    static public void Post_Stream(final String uri, final Map<String, String> fields,
+    static public void post_Stream(final String uri, final Map<String, String> fields,
                                    final ResponseListener_Stream response_listener, final String id) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Response_Stream response = HttpRequest.Post_Stream_Sync(uri, fields);
+                Response_Stream response = HttpRequest.post_Stream_Sync(uri, fields);
                 response_listener.onResponseReceived(response, id);
             }
         });
@@ -48,7 +47,7 @@ public class HttpRequest {
         thread.start();
     }
 
-    static public Response Post_Sync(final String uri, final Map<String, String> fields) {
+    static public Response post_Sync(final String uri, final Map<String, String> fields) {
         HttpURLConnection url_connection = null;
 
         StringBuilder response = new StringBuilder();
@@ -61,7 +60,7 @@ public class HttpRequest {
             URL url = new URL(uri);
             url_connection = (HttpURLConnection)url.openConnection();
 
-            String fields_string = HttpRequest.GetFieldsString(fields);
+            String fields_string = HttpRequest.getFieldsString(fields);
             byte[] post_data = fields_string.getBytes("UTF-8");
 
             url_connection.setConnectTimeout(HttpRequest.TIMEOUT);
@@ -110,7 +109,7 @@ public class HttpRequest {
         return new Response(success, error_message, response.toString());
     }
 
-    static public Response_Stream Post_Stream_Sync(final String uri, final Map<String,
+    static public Response_Stream post_Stream_Sync(final String uri, final Map<String,
             String> fields) {
         HttpURLConnection url_connection = null;
 
@@ -122,7 +121,7 @@ public class HttpRequest {
             URL url = new URL(uri);
             url_connection = (HttpURLConnection)url.openConnection();
 
-            String fields_string = HttpRequest.GetFieldsString(fields);
+            String fields_string = HttpRequest.getFieldsString(fields);
             byte[] post_data = fields_string.getBytes("UTF-8");
 
             url_connection.setConnectTimeout(HttpRequest.TIMEOUT);
@@ -163,7 +162,7 @@ public class HttpRequest {
         return new Response_Stream(success, error_message, url_connection);
     }
 
-    static private String GetFieldsString(Map<String, String> fields) {
+    static private String getFieldsString(Map<String, String> fields) {
         /* Fields String */
         String fields_string = "";
         Iterator it = fields.entrySet().iterator();

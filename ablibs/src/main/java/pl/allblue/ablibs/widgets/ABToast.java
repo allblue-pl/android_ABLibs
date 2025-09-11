@@ -3,9 +3,7 @@ package pl.allblue.ablibs.widgets;
 import android.app.Activity;
 import android.content.Context;
 
-public class Toast
-{
-
+public class ABToast {
     static public void showMessage(final Activity activity, final CharSequence message) {
         activity.runOnUiThread(() -> {
             Context context = activity.getApplicationContext();
